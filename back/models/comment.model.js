@@ -17,7 +17,7 @@ CommentModel.saveComment = async function(comment)
 
     if (newComment.parent) 
     {
-        parent.children.push(newComment._id)
+        newComment.parent.children.push(newComment._id)
         res = await newComment.save()
     }
 
