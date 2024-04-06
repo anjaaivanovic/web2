@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 
 router.get("/all", async (req, res) => {
     try{
-        var recipes = await Recipe.findRecipes(req.query.page)
+        var recipes = await Recipe.findRecipes(req.query.page, req.query.categories, req.query.sort)
         res.send({recipes: recipes})
     }
     catch (err){
@@ -40,6 +40,17 @@ router.get("/:userId", async (req, res) => {
     try{
         var recipes = await Recipe.findRecipesByUserId(req.params.userId)
         res.send({recipes: recipes})
+    }
+    catch (err){
+        console.log(err)
+        res.status(501).send({err: err})
+    }
+})
+
+router.delete("/", async (req, res) => {
+    try{
+        var succes = await Recipe.deleteRecipe(req.query.id)
+        res.send({success: succes})
     }
     catch (err){
         console.log(err)

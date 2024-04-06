@@ -6,12 +6,14 @@ const config = require("./config/config")
 
 const userRoutes = require("./controllers/user.controller")
 const recipeRoutes = require("./controllers/recipe.controller")
+const savedRecipeRoutes = require("./controllers/savedRecipe.controller")
 
 const app = express()
 
 app.use(bodyParser.json())
 app.use("/auth", userRoutes)
 app.use("/recipe", recipeRoutes)
+app.use("/savedRecipe", savedRecipeRoutes)
 
 mongoose.connect(config.dbConnection).then( () => {
     console.log("Db connection successful!")
@@ -19,5 +21,3 @@ mongoose.connect(config.dbConnection).then( () => {
 }).catch(
     err => console.log(err)
 )
-
-

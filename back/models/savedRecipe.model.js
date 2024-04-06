@@ -1,17 +1,19 @@
 const mongoose = require("mongoose")
 
 var SavedRecipeSchema = mongoose.Schema({
-    recipe: { type: mongoose.Schema.Types.ObjectId, ref: "recipe", required: true },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true }
+    recipeId: { type: mongoose.Schema.Types.ObjectId, ref: "recipe", required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true }
 })
 
+SavedRecipeSchema.index({ userId: 1, recipeId: 1 }, { unique: true });
 
 var SavedRecipeModel = mongoose.model("savedRecipe", SavedRecipeSchema)
 
-SavedRecipeModel.saveComment = async function(savedRecipe)
+SavedRecipeModel.saveRecipe = async function(savedRecipe)
 {
+    console.log(savedRecipe)
     var newsavedRecipe = new SavedRecipeModel(savedRecipe)
-    var res = await savedRecipe.save()
+    var res = await newsavedRecipe.save()
 
     if (res) return newsavedRecipe;
     else return null;

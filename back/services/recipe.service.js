@@ -15,7 +15,7 @@ var findRecipeById = async function(id)
 {
     try{
         if (ObjectId.isValid(id))
-        return RecipeModel.findOne({_id: id}).populate('owner').populate('comments').populate('categories');
+        return await RecipeModel.findOne({_id: id}).populate('owner').populate('comments').populate('categories');
     else
         return undefined;
 
@@ -27,7 +27,7 @@ var findRecipesByUserId = async function(userId)
 {
     try{
         if (ObjectId.isValid(userId))
-        return RecipeModel.find({owner: userId}).populate('owner').populate('comments').populate('categories');
+        return await RecipeModel.find({owner: userId}).populate('owner').populate('comments').populate('categories');
     else
         return undefined;
 
@@ -51,9 +51,22 @@ var findRecipes = async function(page, categories, sort)
     catch (err) { throw err }
 }
 
+var deleteRecipe = async function(id){
+    try{
+        if (ObjectId.isValid(id))
+        {
+            var deletedCount = (await RecipeModel.deleteOne({_id: id})).deletedCount
+            return deletedCount > 0
+        }
+        return false
+    }
+    catch (err){ throw err }
+}
+
 module.exports = {
     saveRecipe,
     findRecipeById,
     findRecipesByUserId,
-    findRecipes
+    findRecipes,
+    deleteRecipe
 }
