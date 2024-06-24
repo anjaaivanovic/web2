@@ -64,9 +64,4 @@ UserModel.register = async function(email, firstName, lastName, password)
     catch(err){ throw err; }
 }
 
-UserModel.login = async function(email, password)
-{
-    
-}
-
 module.exports = UserModel

@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Recipe = require("../services/recipe.service")
+const passport = require("./config/passport-config")
 
 /**
  * @swagger
@@ -38,7 +39,8 @@ const Recipe = require("../services/recipe.service")
  *                 err:
  *                   type: string
  */
-router.post("/", async (req, res) => {
+router.post("/", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
     try{
         var result = await Recipe.saveRecipe(req.body)
         if (result) res.send({result: result})
@@ -227,7 +229,8 @@ router.get("/:userId", async (req, res) => {
  *                 err:
  *                   type: string
  */
-router.delete("/", async (req, res) => {
+router.delete("/", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
     try{
         var success = await Recipe.deleteRecipe(req.query.id)
         res.send({success: success})

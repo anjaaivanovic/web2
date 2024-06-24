@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const SavedRecipe = require("../services/savedRecipe.service")
+const passport = require("./config/passport-config")
 
 /**
  * @swagger
@@ -60,7 +61,8 @@ const SavedRecipe = require("../services/savedRecipe.service")
  *                 err:
  *                   type: string
  */
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
     try{
         var recipes = await SavedRecipe.findSavedRecipes(req.params.userId, req.query.page, req.query.categories, req.query.sort)
         res.send({recipes: recipes})
@@ -103,7 +105,8 @@ router.get("/:userId", async (req, res) => {
  *                 err:
  *                   type: string
  */
-router.post("/", async (req, res) => {
+router.post("/", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
     try{
         var result = await SavedRecipe.save(req.body)
         if (result) res.send({result: result})
@@ -153,7 +156,8 @@ router.post("/", async (req, res) => {
  *                 err:
  *                   type: string
  */
-router.delete("/", async (req, res) => {
+router.delete("/", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
     try{
         var succes = await SavedRecipe.unsave(req.query.userId, req.query.recipeId)
         res.send({success: succes})

@@ -1,6 +1,7 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
+const cors = require('cors');
 
 const config = require("./config/config")
 
@@ -17,6 +18,21 @@ app.use(bodyParser.json())
 app.use("/auth", userRoutes)
 app.use("/recipe", recipeRoutes)
 app.use("/savedRecipe", savedRecipeRoutes)
+
+const corsOptions = [
+    {
+      origin: "http://localhost:4200",
+      optionsSuccessStatus: 200,
+      methods: "GET, POST, DELETE, PUT"
+    }, 
+    {
+      origin: "http://localhost:8000",
+      optionsSuccessStatus: 200,
+      methods: "GET, POST, DELETE, PUT"
+    }
+  ]
+  
+  app.use(cors(corsOptions));  
 
 const swaggerOptions = {
     swaggerDefinition: {

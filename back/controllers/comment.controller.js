@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Comment = require("../services/comment.service")
+const passport = require("./config/passport-config")
 
 /**
  * @swagger
@@ -42,7 +43,8 @@ const Comment = require("../services/comment.service")
  *                   type: string
  */
 
-router.post("/", async (req, res) => {
+router.post("/", passport.authenticate('jwt', {session: false}),
+ async (req, res) => {
     try{
         var result = await Comment.saveComment(req.body)
         if (result) res.send({result: result})
@@ -86,7 +88,8 @@ router.post("/", async (req, res) => {
  *                 err:
  *                   type: string
  */
-router.delete("/", async (req, res) => {
+router.delete("/", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
     try{
         var succes = await Comment.deleteComment(req.query.commentId)
         res.send({success: succes})

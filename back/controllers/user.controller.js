@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const User = require("../services/user.service")
+const passport = require("./config/passport-config")
 
 /**
  * @swagger
@@ -21,6 +22,10 @@ const User = require("../services/user.service")
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *              - username
+ *              - email
+ *              - password
  *             properties:
  *               email:
  *                 type: string
@@ -33,22 +38,8 @@ const User = require("../services/user.service")
  *     responses:
  *       200:
  *         description: Successfully registered the user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
  *       501:
  *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 err:
- *                   type: string
  */
 router.post("/register", async (req, res) => {
     try
@@ -63,8 +54,23 @@ router.post("/register", async (req, res) => {
     }
 })
 
-router.post("/login", async (req, res) => {
-    
+router.post("/login", (req, res, next) => {
+    passport.authenticate('local', { session: false }, (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.status(401).json({ message: info.message });
+        }
+        res.json({ token: user.generateJwt() });
+    })(req, res, next);
+});
+
+
+router.get("/validate-jwt",
+    passport.authenticate('jwt', {session: false}),
+(req, res)=> {
+    res.send({ isValid: true});
 })
 
 module.exports = router
