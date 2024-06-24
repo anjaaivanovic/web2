@@ -8,6 +8,7 @@ const config = require("./config/config")
 const userRoutes = require("./controllers/user.controller")
 const recipeRoutes = require("./controllers/recipe.controller")
 const savedRecipeRoutes = require("./controllers/savedRecipe.controller")
+const categoryRoutes = require("./controllers/category.controller")
 
 const swaggerJSDoc = require("swagger-jsdoc")
 const swaggerUi = require("swagger-ui-express")
@@ -18,6 +19,7 @@ app.use(bodyParser.json())
 app.use("/auth", userRoutes)
 app.use("/recipe", recipeRoutes)
 app.use("/savedRecipe", savedRecipeRoutes)
+app.use("/category", categoryRoutes)
 
 const corsOptions = [
     {

@@ -14,6 +14,9 @@ var RecipeSchema = mongoose.Schema({
     time: {type: Number, required: true}
 })
 
+RecipeSchema.index({ title: 1 });
+RecipeSchema.index({ time: 1 });
+RecipeSchema.index({ title: 'text', description: 'text' });
 var RecipeModel = mongoose.model('recipe', RecipeSchema)
 
 RecipeModel.saveRecipe = async function(recipe)

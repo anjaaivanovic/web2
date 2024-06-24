@@ -64,7 +64,7 @@ const passport = require("./config/passport-config")
 router.get("/:userId", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
-        var recipes = await SavedRecipe.findSavedRecipes(req.params.userId, req.query.page, req.query.categories, req.query.sort)
+        var recipes = await SavedRecipe.findSavedRecipes(req.params.userId, req.query.page, req.query.categories, req.query.sort, req.query.order)
         res.send({recipes: recipes})
     }
     catch (err){

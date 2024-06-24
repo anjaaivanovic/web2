@@ -4,8 +4,8 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
 
-//add sorting
-var findSavedRecipes = async function(userId, page, categories, sort)
+//add sorting and search
+var findSavedRecipes = async function(userId, page, categories, sort, order)
 {
     try{
         if (ObjectId.isValid(userId))
@@ -19,7 +19,12 @@ var findSavedRecipes = async function(userId, page, categories, sort)
                 query.categories = { $in: categories };
             }
 
+            var sortCriteria = {};
+            if (sort && order) sortCriteria[sort] = order === 'asc' ? 1 : -1;
+            else sortCriteria = { title: 1 };
+
             return await RecipeModel.find(query)
+                .sort(sortCriteria)
                 .skip((page - 1) * recipesPerPage).limit(recipesPerPage)
                 .populate('owner').populate('comments').populate('categories');    
         }

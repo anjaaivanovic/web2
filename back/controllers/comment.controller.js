@@ -42,7 +42,6 @@ const passport = require("./config/passport-config")
  *                 err:
  *                   type: string
  */
-
 router.post("/", passport.authenticate('jwt', {session: false}),
  async (req, res) => {
     try{

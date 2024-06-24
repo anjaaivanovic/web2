@@ -35,16 +35,23 @@ var findRecipesByUserId = async function(userId)
     catch (err) { throw err }
 }
 
-//add sorting
-var findRecipes = async function(page, categories, sort)
+var findRecipes = async function(page, categories, search, sort, order)
 {
     try{
         var query = {};
         if (categories && categories.length > 0) {
             query.categories = { $in: categories };
         }
+        if (search) {
+            query.$text = { $search: search };
+        }
+
+        var sortCriteria = {};
+        if (sort && order) sortCriteria[sort] = order === 'asc' ? 1 : -1;
+        else sortCriteria = { title: 1 };
 
         return await RecipeModel.find(query)
+            .sort(sortCriteria)
             .skip((page - 1) * recipesPerPage).limit(recipesPerPage)
             .populate('owner').populate('comments').populate('categories');    
     }
