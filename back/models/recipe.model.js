@@ -11,7 +11,8 @@ var RecipeSchema = mongoose.Schema({
     steps: [ {type: String}],
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: "comment"}],
     categories: [{type: mongoose.Schema.Types.ObjectId, ref: "category", required: true}],
-    time: {type: Number, required: true}
+    prepTime: {type: Number, required: true},
+    cookTime: {type: Number, required: true}
 })
 
 RecipeSchema.index({ title: 1 });

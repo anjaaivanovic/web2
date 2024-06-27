@@ -66,6 +66,15 @@ router.post("/login", (req, res, next) => {
     })(req, res, next);
 });
 
+router.get("/:id", async (req, res) => {
+    try{
+        var profile = await User.getProfile(req.params.id);
+        res.send(profile)
+    }
+    catch (err){
+        res.status(501).send({err: err})
+    }
+})
 
 router.get("/validate-jwt",
     passport.authenticate('jwt', {session: false}),

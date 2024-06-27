@@ -9,7 +9,7 @@ var UserSchema = mongoose.Schema({
     hash: {type: String},
     salt: {type: String},
     role: {type: Number},
-    recipes : [{type: mongoose.Schema.Types.ObjectId, ref: "recipe"}]
+    image: {type: String}
 })
 
 UserSchema.methods.savePassword = function(password)
@@ -51,7 +51,8 @@ UserModel.register = async function(email, firstName, lastName, password)
             email:email,
             firstName:firstName,
             lastName:lastName,
-            admin: false
+            admin: false,
+            image: "../data/images/default.png"
         })
 
         user.savePassword(password)
