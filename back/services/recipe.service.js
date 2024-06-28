@@ -2,6 +2,7 @@ const RecipeModel = require("../models/recipe.model")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
+const commentsPerPage = 2
 
 var saveRecipe = async function(recipe)
 {
@@ -11,35 +12,74 @@ var saveRecipe = async function(recipe)
     catch (err) { throw err }
 }
 
-var findRecipeById = async function(id)
-{
-    try{
-        if (ObjectId.isValid(id))
-        return await RecipeModel.findOne({_id: id}).populate('owner').populate('comments').populate('categories');
-    else
-        return undefined;
+var findRecipeById = async function(id, commentPage = 1) {
+    try {
+        if (ObjectId.isValid(id)) {
+            var recipe = await RecipeModel.findOne({ _id: id })
+                .populate('owner')
+                .populate('categories')
+                .lean();
 
-    }
-    catch (err) { throw err }
+            if (!recipe) return undefined;
+
+            var totalComments = await RecipeModel.countDocuments({ _id: id, comments: { $exists: true, $not: { $size: 0 } } });
+            var totalCommentPages = Math.ceil(totalComments / commentsPerPage);
+
+            var comments = await RecipeModel.findOne({ _id: id }, { comments: { $slice: [(commentPage - 1) * commentsPerPage, commentsPerPage] } })
+                .populate('comments')
+                .select('comments')
+                .lean();
+
+            recipe.comments = comments ? comments.comments : [];
+
+            return {
+                recipe,
+                commentPagination: {
+                    currentPage: commentPage,
+                    totalPages: totalCommentPages,
+                    pageSize: commentsPerPage,
+                    totalItems: totalComments
+                }
+            };
+        } else {
+            return undefined;
+        }
+    } catch (err) { throw err; }
 }
 
-var findRecipesByUserId = async function(userId)
-{
-    try{
-        if (ObjectId.isValid(userId))
-        return await RecipeModel.find({owner: userId}).populate('owner').populate('comments').populate('categories');
-    else
-        return undefined;
+var findRecipesByUserId = async function(userId, page = 1) {
+    try {
+        if (ObjectId.isValid(userId)) {
+            var query = { owner: userId };
+            var totalItems = await RecipeModel.countDocuments(query);
+            var recipes = await RecipeModel.find(query)
+                .skip((page - 1) * recipesPerPage)
+                .limit(recipesPerPage)
+                .populate('owner')
+                .populate('comments')
+                .populate('categories');
 
-    }
-    catch (err) { throw err }
+            var totalPages = Math.ceil(totalItems / recipesPerPage);
+
+            return {
+                data: recipes,
+                pagination: {
+                    currentPage: page,
+                    totalPages: totalPages,
+                    pageSize: recipesPerPage,
+                    totalItems: totalItems
+                }
+            };
+        } else {
+            return undefined;
+        }
+    } catch (err) { throw err; }
 }
 
-var findRecipes = async function(page, categories, search, sort, order)
-{
-    try{
+var findRecipes = async function(page = 1, categories = [], search = '', sort = 'title', order = 'asc') {
+    try {
         var query = {};
-        if (categories && categories.length > 0) {
+        if (categories.length > 0) {
             query.categories = { $in: categories };
         }
         if (search) {
@@ -47,15 +87,29 @@ var findRecipes = async function(page, categories, search, sort, order)
         }
 
         var sortCriteria = {};
-        if (sort && order) sortCriteria[sort] = order === 'asc' ? 1 : -1;
-        else sortCriteria = { title: 1 };
+        sortCriteria[sort] = order === 'asc' ? 1 : -1;
 
-        return await RecipeModel.find(query)
+        var totalItems = await RecipeModel.countDocuments(query);
+        var recipes = await RecipeModel.find(query)
             .sort(sortCriteria)
-            .skip((page - 1) * recipesPerPage).limit(recipesPerPage)
-            .populate('owner').populate('comments').populate('categories');    
-    }
-    catch (err) { throw err }
+            .skip((page - 1) * recipesPerPage)
+            .limit(recipesPerPage)
+            .populate('owner')
+            .populate('comments')
+            .populate('categories');
+
+        var totalPages = Math.ceil(totalItems / recipesPerPage);
+
+        return {
+            data: recipes,
+            pagination: {
+                currentPage: page,
+                totalPages: totalPages,
+                pageSize: recipesPerPage,
+                totalItems: totalItems
+            }
+        };
+    } catch (err) { throw err; }
 }
 
 var deleteRecipe = async function(id){

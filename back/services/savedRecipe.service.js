@@ -4,7 +4,6 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
 
-//add sorting and search
 var findSavedRecipes = async function(userId, page, categories, sort, order)
 {
     try{

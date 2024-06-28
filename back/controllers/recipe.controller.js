@@ -86,7 +86,7 @@ async (req, res) => {
  */
 router.get("/", async (req, res) => {
     try{
-        var recipe = await Recipe.findRecipeById(req.query.id)
+        var recipe = await Recipe.findRecipeById(req.query.id, req.query.commentPage)
         res.send({recipe: recipe})
     }
     catch (err){
@@ -189,7 +189,7 @@ router.get("/all", async (req, res) => {
  */
 router.get("/:userId", async (req, res) => {
     try{
-        var recipes = await Recipe.findRecipesByUserId(req.params.userId)
+        var recipes = await Recipe.findRecipesByUserId(req.params.userId, req.query.page)
         res.send({recipes: recipes})
     }
     catch (err){
