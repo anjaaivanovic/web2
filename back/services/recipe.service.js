@@ -47,12 +47,24 @@ var findRecipeById = async function(id, commentPage = 1) {
     } catch (err) { throw err; }
 }
 
-var findRecipesByUserId = async function(userId, page = 1) {
+var findRecipesByUserId = async function(userId, page = 1, categories = [], search = '', sort = 'title', order = 'asc') {
     try {
         if (ObjectId.isValid(userId)) {
             var query = { owner: userId };
+            
+            if (categories.length > 0) {
+                query.categories = { $in: categories };
+            }
+            if (search) {
+                query.$text = { $search: search };
+            }
+
+            var sortCriteria = {};
+            sortCriteria[sort] = order === 'asc' ? 1 : -1;
+
             var totalItems = await RecipeModel.countDocuments(query);
             var recipes = await RecipeModel.find(query)
+                .sort(sortCriteria)
                 .skip((page - 1) * recipesPerPage)
                 .limit(recipesPerPage)
                 .populate('owner')
