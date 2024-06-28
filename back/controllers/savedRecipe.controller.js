@@ -65,7 +65,7 @@ router.get("/:userId", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
         var categories = req.query.categories ? req.query.categories.split(',') : [];
-        var recipes = await SavedRecipe.findSavedRecipes(req.params.userId, req.query.page, categories, req.query.sort, req.query.order)
+        var recipes = await SavedRecipe.findSavedRecipes(req.params.userId, req.query.page, categories, req.query.prepTime, req.query.cookTime, req.query.servingSize, req.query.sort, req.query.order)
         res.send({recipes: recipes})
     }
     catch (err){

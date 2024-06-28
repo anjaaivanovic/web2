@@ -4,7 +4,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
 
-var findSavedRecipes = async function(userId, page, categories, sort, order)
+var findSavedRecipes = async function(userId, page, categories, prepTime, cookTime, servingSize, sort, order)
 {
     try{
         if (ObjectId.isValid(userId))
@@ -16,6 +16,15 @@ var findSavedRecipes = async function(userId, page, categories, sort, order)
 
             if (categories && categories.length > 0) {
                 query.categories = { $in: categories };
+            }
+            if (prepTime) {
+                query.prepTime = { $lte: prepTime };
+            }
+            if (cookTime) {
+                query.cookTime = { $lte: cookTime };
+            }
+            if (servingSize) {
+                query.servingSize = { $gte: servingSize };
             }
 
             var sortCriteria = {};

@@ -47,7 +47,7 @@ var findRecipeById = async function(id, commentPage = 1) {
     } catch (err) { throw err; }
 }
 
-var findRecipesByUserId = async function(userId, page = 1, categories = [], search = '', sort = 'title', order = 'asc') {
+var findRecipesByUserId = async function(userId, page = 1, categories = [], prepTime, cookTime, servingSize, search = '', sort = 'title', order = 'asc') {
     try {
         if (ObjectId.isValid(userId)) {
             var query = { owner: userId };
@@ -57,6 +57,15 @@ var findRecipesByUserId = async function(userId, page = 1, categories = [], sear
             }
             if (search) {
                 query.$text = { $search: search };
+            }
+            if (prepTime) {
+                query.prepTime = { $lte: prepTime };
+            }
+            if (cookTime) {
+                query.cookTime = { $lte: cookTime };
+            }
+            if (servingSize) {
+                query.servingSize = { $gte: servingSize };
             }
 
             var sortCriteria = {};
@@ -88,7 +97,7 @@ var findRecipesByUserId = async function(userId, page = 1, categories = [], sear
     } catch (err) { throw err; }
 }
 
-var findRecipes = async function(page = 1, categories = [], search = '', sort = 'title', order = 'asc') {
+var findRecipes = async function(page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc') {
     try {
         var query = {};
         if (categories.length > 0) {
@@ -96,6 +105,15 @@ var findRecipes = async function(page = 1, categories = [], search = '', sort = 
         }
         if (search) {
             query.$text = { $search: search };
+        }
+        if (prepTime) {
+            query.prepTime = { $lte: prepTime };
+        }
+        if (cookTime) {
+            query.cookTime = { $lte: cookTime };
+        }
+        if (servingSize) {
+            query.servingSize = { $gte: servingSize };
         }
 
         var sortCriteria = {};
