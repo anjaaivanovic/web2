@@ -3,7 +3,7 @@ const crypto = require("crypto")
 const jwt = require("jsonwebtoken")
 
 var UserSchema = mongoose.Schema({
-    email: {type: String, unique: true},
+    email: {type: String, unique: true, immutable: true},
     firstName: {type: String},
     lastName: {type: String},
     hash: {type: String},
@@ -64,5 +64,15 @@ UserModel.register = async function(email, firstName, lastName, password)
     }
     catch(err){ throw err; }
 }
+
+UserModel.updateUser = async function(id, updatedUser) {
+    try {
+        delete updatedUser.email;
+        const result = await UserModel.findByIdAndUpdate(id, updatedUser, { new: true });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+};
 
 module.exports = UserModel

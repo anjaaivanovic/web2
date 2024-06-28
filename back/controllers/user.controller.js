@@ -76,8 +76,29 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.get("/validate-jwt",
-    passport.authenticate('jwt', {session: false}),
+router.delete("/", async (req, res) => {
+    try{
+        var success = await User.deleteUser(req.query.id);
+        res.send(success)
+    }
+    catch (err){
+        res.status(501).send({err: err})
+    }
+})
+
+router.put("/", passport.authenticate('jwt', { session: false }),
+async (req, res) => {
+    try {
+        var result = await User.updateUser(req.user._id, req.body);
+        if (result) res.send({ user: result });
+        else res.status(501).send();
+    } catch (err) {
+        console.log(err);
+        res.status(501).send({ err: err });
+    }
+});
+
+router.get("/validate-jwt", passport.authenticate('jwt', {session: false}),
 (req, res)=> {
     res.send({ isValid: true});
 })

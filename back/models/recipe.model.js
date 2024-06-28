@@ -12,7 +12,8 @@ var RecipeSchema = mongoose.Schema({
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: "comment"}],
     categories: [{type: mongoose.Schema.Types.ObjectId, ref: "category", required: true}],
     prepTime: {type: Number, required: true},
-    cookTime: {type: Number, required: true}
+    cookTime: {type: Number, required: true},
+    servingSize: {type: Number, required: true}
 })
 
 RecipeSchema.index({ title: 1 });
@@ -29,5 +30,14 @@ RecipeModel.saveRecipe = async function(recipe)
     if (result) return true
     return false
 }
+
+RecipeModel.updateRecipe = async function(id, updatedRecipe) {
+    try {
+        var result = await RecipeModel.findByIdAndUpdate(id, updatedRecipe, { new: true });
+        return result;
+    } catch (err) {
+        throw err;
+    }
+};
 
 module.exports = RecipeModel

@@ -242,5 +242,15 @@ async (req, res) => {
     }
 })
 
+router.put("/", passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        var result = await Recipe.updateRecipe(req.body.id, req.body);
+        if (result) res.send({ recipe: result });
+        else res.status(501).send();
+    } catch (err) {
+        console.log(err);
+        res.status(501).send({ err: err });
+    }
+});
 
 module.exports = router

@@ -70,10 +70,19 @@ var deleteRecipe = async function(id){
     catch (err){ throw err }
 }
 
+var updateRecipe = async function(id, updatedRecipe) {
+    try {
+        return await RecipeModel.updateRecipe(id, updatedRecipe);
+    } catch (err) {
+        throw err;
+    }
+};
+
 module.exports = {
     saveRecipe,
     findRecipeById,
     findRecipesByUserId,
     findRecipes,
-    deleteRecipe
+    deleteRecipe,
+    updateRecipe
 }
