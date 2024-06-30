@@ -1,4 +1,5 @@
 const RecipeModel = require("../models/recipe.model")
+const RatingModel = require("../models/rating.model")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
@@ -51,42 +52,74 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
     try {
         var query = {};
         
-        if (userId && ObjectId.isValid(userId)) {
-            query.owner = userId;
-        }
-
-        if (categories.length > 0) {
-            query.categories = { $in: categories };
-        }
-        if (search) {
-            query.$text = { $search: search };
-        }
-        if (prepTime) {
-            query.prepTime = { $lte: prepTime };
-        }
-        if (cookTime) {
-            query.cookTime = { $lte: cookTime };
-        }
-        if (servingSize) {
-            query.servingSize = { $gte: servingSize };
-        }
+        if (userId && ObjectId.isValid(userId)) query.owner = userId;
+        if (categories.length > 0) query.categories = { $in: categories };
+        if (search) query.$text = { $search: search };
+        if (prepTime) query.prepTime = { $lte: prepTime };
+        if (cookTime) query.cookTime = { $lte: cookTime };
+        if (servingSize) query.servingSize = { $gte: servingSize };
 
         var sortCriteria = {};
-        sortCriteria[sort] = order === 'asc' ? 1 : -1;
+        var sortByRating = false;
+        if (sort == "rating"){  
+            sortCriteria = { averageRating: order === 'asc' ? 1 : -1 };
+            sortByRating = true;
+        }
+        else sortCriteria[sort] = order === 'asc' ? 1 : -1;
 
         var totalItems = await RecipeModel.countDocuments(query);
-        var recipes = await RecipeModel.find(query)
-            .sort(sortCriteria)
-            .skip((page - 1) * recipesPerPage)
-            .limit(recipesPerPage)
+        var recipesQuery = RecipeModel.find(query)
             .populate('owner')
             .populate('comments')
             .populate('categories');
+        
+        if (sortByRating) {
+            var averageRatings = await calculateAverageRatings(userId, categories, search, prepTime, cookTime, servingSize, sort, order);
+
+            var ratingMap = averageRatings.reduce((map, avgRating) => {
+                map[avgRating._id.toString()] = avgRating.averageRating;
+                return map;
+            }, {});
+
+            recipesQuery = recipesQuery.sort((recipeA, recipeB) => {
+                var ratingA = ratingMap[recipeA._id.toString()] || 0;
+                var ratingB = ratingMap[recipeB._id.toString()] || 0;
+                return (order === 'asc' ? ratingA - ratingB : ratingB - ratingA);
+            });
+        } else {
+            recipesQuery = recipesQuery.sort(sortCriteria);
+        }
+
+        var recipes = await recipesQuery
+        .skip((page - 1) * recipesPerPage)
+        .limit(recipesPerPage);
+
+        var recipeIds = recipes.map(recipe => recipe._id);
+
+        var ratings = await RatingModel.aggregate([
+            {
+                $match: { recipe: { $in: recipeIds } }
+            },
+            {
+                $group: {
+                    _id: '$recipe',
+                    averageRating: { $avg: '$rating' }
+                }
+            }
+        ]);
+
+        var recipesWithRatings = recipes.map(recipe => {
+            var rating = ratings.find(r => r._id.toString() === recipe._id.toString());
+            return {
+                ...recipe.toObject(),
+                averageRating: rating ? rating.averageRating : 0
+            };
+        });
 
         var totalPages = Math.ceil(totalItems / recipesPerPage);
 
         return {
-            data: recipes,
+            data: recipesWithRatings,
             pagination: {
                 currentPage: page,
                 totalPages: totalPages,
@@ -119,10 +152,31 @@ var updateRecipe = async function(id, updatedRecipe) {
     }
 };
 
+var rateRecipe = async function(rating) {
+    try{
+        return await RatingModel.saveRating(rating)
+    }
+    catch (err) { throw err }
+}
+
+var deleteRating = async function(id) {
+    try{
+        if (ObjectId.isValid(id))
+        {
+            var deletedCount = (await RatingModel.deleteOne({_id: id})).deletedCount
+            return deletedCount > 0
+        }
+        return false
+    }
+    catch (err){ throw err }
+}
+
 module.exports = {
     saveRecipe,
     findRecipeById,
     findRecipes,
     deleteRecipe,
-    updateRecipe
+    updateRecipe,
+    rateRecipe,
+    deleteRating
 }

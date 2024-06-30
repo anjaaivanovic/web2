@@ -208,4 +208,16 @@ router.put("/", passport.authenticate('jwt', { session: false }), async (req, re
     }
 });
 
+router.post("/rate", passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try{
+        var result = await Recipe.rateRecipe(req.body);
+        if (result) res.send( { recipe: result });
+        else res.status(501).send()
+    }
+    catch (err){
+        console.log(err);
+        res.status(501).send({ err: err });
+    }
+})
+
 module.exports = router
