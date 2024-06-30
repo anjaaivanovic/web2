@@ -1,0 +1,7 @@
+<div>
+    <a routerLink="/home">Home</a>
+    <a *ngIf="this.token != null" routerLink="/profile">Profile</a>
+    <a routerLink="/register">Register</a>
+    <a routerLink="/login">Login</a>
+    <button *ngIf="this.token != null" (click)="logout()">Logout</button>
+</div>

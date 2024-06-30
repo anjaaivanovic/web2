@@ -15,26 +15,19 @@ const swaggerUi = require("swagger-ui-express")
 
 const app = express()
 
+const corsOptions = {
+  origin: "http://localhost:4200",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));  
+
 app.use(bodyParser.json())
 app.use("/auth", userRoutes)
 app.use("/recipe", recipeRoutes)
 app.use("/savedRecipe", savedRecipeRoutes)
 app.use("/category", categoryRoutes)
-
-const corsOptions = [
-    {
-      origin: "http://localhost:4200",
-      optionsSuccessStatus: 200,
-      methods: "GET, POST, DELETE, PUT"
-    }, 
-    {
-      origin: "http://localhost:8000",
-      optionsSuccessStatus: 200,
-      methods: "GET, POST, DELETE, PUT"
-    }
-  ]
-  
-  app.use(cors(corsOptions));  
 
 const swaggerOptions = {
     swaggerDefinition: {
