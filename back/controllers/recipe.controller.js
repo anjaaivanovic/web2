@@ -144,52 +144,7 @@ router.get("/", async (req, res) => {
 router.get("/all", async (req, res) => {
     try{
         var categories = req.query.categories ? req.query.categories.split(',') : [];
-        var recipes = await Recipe.findRecipes(req.query.page, categories, req.query.search, req.query.prepTime, req.query.cookTime, req.query.servingSize, req.query.sort, req.query.order)
-        res.send({recipes: recipes})
-    }
-    catch (err){
-        console.log(err)
-        res.status(501).send({err: err})
-    }
-})
-
-/**
- * @swagger
- * /recipe/{userId}:
- *   get:
- *     tags: [Recipe]
- *     summary: Get recipes by user id
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         description: ID of the user to retrieve recipes for.
- *     responses:
- *       200:
- *         description: Successfully retrieved recipes by userId
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 recipes:
- *                   type: array
- *                   items:
- *                     type: object
- *       501:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 err:
- *                   type: string
- */
-router.get("/:userId", async (req, res) => {
-    try{
-        var recipes = await Recipe.findRecipesByUserId(req.params.userId, req.query.page, req.query.categories, req.query.prepTime, req.query.cookTime, req.query.servingSize, req.query.search, req.query.sort, req.query.order)
+        var recipes = await Recipe.findRecipes(req.query.userId, req.query.page, categories, req.query.search, req.query.prepTime, req.query.cookTime, req.query.servingSize, req.query.sort, req.query.order)
         res.send({recipes: recipes})
     }
     catch (err){

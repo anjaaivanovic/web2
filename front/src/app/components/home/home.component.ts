@@ -3,6 +3,8 @@ import { RecipeService } from '../../services/recipe.service';
 import { Recipe } from '../../models/recipe.model';
 import { Pagination } from '../../models/pagination.model';
 import { Router } from '@angular/router';
+import { Category } from '../../models/category.model';
+import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(private recipeService: RecipeService, private router: Router){}
+  constructor(private recipeService: RecipeService, private categoryService: CategoryService, private router: Router){}
   recipes: Recipe[] = []
   pagination: Pagination = {
     currentPage: 0,
@@ -19,8 +21,14 @@ export class HomeComponent {
     totalItems: 0
   }
   token: string | null = localStorage.getItem("token")
+  categories: Category[] = []
 
   ngOnInit(): void {
+    this.loadRecipes();
+    this.loadCategories();
+  }
+
+  loadRecipes() {
     this.recipeService.allRecipes().subscribe(
       {
         next: (resp) => {
@@ -28,6 +36,20 @@ export class HomeComponent {
           this.pagination = resp.recipes.pagination
           console.log(this.recipes)
           console.log(this.pagination)
+        },
+        error: (error) => {
+          console.log(error)
+        }
+      }
+    )
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(
+      {
+        next: (resp) => {
+          this.categories = resp.categories
+          console.log(this.categories)
         },
         error: (error) => {
           console.log(error)

@@ -47,59 +47,14 @@ var findRecipeById = async function(id, commentPage = 1) {
     } catch (err) { throw err; }
 }
 
-var findRecipesByUserId = async function(userId, page = 1, categories = [], prepTime, cookTime, servingSize, search = '', sort = 'title', order = 'asc') {
-    try {
-        if (ObjectId.isValid(userId)) {
-            var query = { owner: userId };
-            
-            if (categories.length > 0) {
-                query.categories = { $in: categories };
-            }
-            if (search) {
-                query.$text = { $search: search };
-            }
-            if (prepTime) {
-                query.prepTime = { $lte: prepTime };
-            }
-            if (cookTime) {
-                query.cookTime = { $lte: cookTime };
-            }
-            if (servingSize) {
-                query.servingSize = { $gte: servingSize };
-            }
-
-            var sortCriteria = {};
-            sortCriteria[sort] = order === 'asc' ? 1 : -1;
-
-            var totalItems = await RecipeModel.countDocuments(query);
-            var recipes = await RecipeModel.find(query)
-                .sort(sortCriteria)
-                .skip((page - 1) * recipesPerPage)
-                .limit(recipesPerPage)
-                .populate('owner')
-                .populate('comments')
-                .populate('categories');
-
-            var totalPages = Math.ceil(totalItems / recipesPerPage);
-
-            return {
-                data: recipes,
-                pagination: {
-                    currentPage: page,
-                    totalPages: totalPages,
-                    pageSize: recipesPerPage,
-                    totalItems: totalItems
-                }
-            };
-        } else {
-            return undefined;
-        }
-    } catch (err) { throw err; }
-}
-
-var findRecipes = async function(page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc') {
+var findRecipes = async function(userId, page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc') {
     try {
         var query = {};
+        
+        if (userId && ObjectId.isValid(userId)) {
+            query.owner = userId;
+        }
+
         if (categories.length > 0) {
             query.categories = { $in: categories };
         }
@@ -139,7 +94,9 @@ var findRecipes = async function(page = 1, categories = [], search = '', prepTim
                 totalItems: totalItems
             }
         };
-    } catch (err) { throw err; }
+    } catch (err) { 
+        throw err; 
+    }
 }
 
 var deleteRecipe = async function(id){
@@ -165,7 +122,6 @@ var updateRecipe = async function(id, updatedRecipe) {
 module.exports = {
     saveRecipe,
     findRecipeById,
-    findRecipesByUserId,
     findRecipes,
     deleteRecipe,
     updateRecipe
