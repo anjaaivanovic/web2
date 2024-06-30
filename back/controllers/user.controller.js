@@ -72,6 +72,7 @@ router.get("/:id", async (req, res) => {
         res.send(profile)
     }
     catch (err){
+        console.log(err)
         res.status(501).send({err: err})
     }
 })
