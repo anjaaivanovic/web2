@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const User = require("../services/user.service")
 const passport = require("./config/passport-config")
+const upload = require('./config/multer-config'); 
 
 /**
  * @swagger
@@ -87,9 +88,10 @@ router.delete("/", async (req, res) => {
     }
 })
 
-router.put("/", passport.authenticate('jwt', { session: false }),
+router.put("/", passport.authenticate('jwt', { session: false }), upload.single('image'),
 async (req, res) => {
     try {
+        req.body.image = req.file.filename
         var result = await User.updateUser(req.user._id, req.body);
         if (result) res.send({ user: result });
         else res.status(501).send();

@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const Recipe = require("../services/recipe.service")
 const passport = require("./config/passport-config")
+const upload = require('./config/multer-config'); 
 
 /**
  * @swagger
@@ -39,9 +40,10 @@ const passport = require("./config/passport-config")
  *                 err:
  *                   type: string
  */
-router.post("/", passport.authenticate('jwt', {session: false}),
+router.post("/", passport.authenticate('jwt', {session: false}), upload.single('image'),
 async (req, res) => {
     try{
+        req.body.image = req.file.filename
         var result = await Recipe.saveRecipe(req.body)
         if (result) res.send({result: result})
         else res.status(501).send()

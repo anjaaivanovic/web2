@@ -1,3 +1,7 @@
 <app-header></app-header>
-<p>home works!</p>
 
+<div class="container">
+    <div class="recipe-list">
+        <app-card *ngFor="let recipe of recipes" [recipe]="recipe"></app-card>
+    </div>
+</div>

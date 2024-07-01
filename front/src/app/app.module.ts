@@ -11,6 +11,7 @@ import { RecipeComponent } from './components/recipe/recipe.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { FormsModule } from '@angular/forms';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FormsModule } from '@angular/forms';
     ProfileComponent,
     RecipeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,

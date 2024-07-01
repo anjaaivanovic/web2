@@ -49,7 +49,7 @@ var findRecipeById = async function(id, commentPage = 1) {
 
             recipe.comments = comments ? comments.comments : [];
             recipe.averageRating = averageRating
-            
+
             return {
                 recipe,
                 commentPagination: {

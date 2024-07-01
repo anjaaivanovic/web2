@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const cors = require('cors');
+const path = require('path')
 
 const config = require("./config/config")
 
@@ -28,6 +29,7 @@ app.use("/auth", userRoutes)
 app.use("/recipe", recipeRoutes)
 app.use("/savedRecipe", savedRecipeRoutes)
 app.use("/category", categoryRoutes)
+app.use('/images', express.static(path.join(__dirname, 'data', 'images')));
 
 const swaggerOptions = {
     swaggerDefinition: {

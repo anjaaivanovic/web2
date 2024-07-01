@@ -1,0 +1,89 @@
+.card {
+    display: flex;
+    flex-direction: row;
+    background-color: #f9d6b3;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .card-content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  .recipe-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+  }
+  
+  .recipe-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .recipe-header {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .recipe-title {
+    margin: 0;
+    font-size: 24px;
+    color: #3D4113;
+  }
+  
+  .recipe-author {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+  }
+  
+  .recipe-description {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #000000;
+  }
+  
+  .recipe-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .recipe-time {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #6c6c6c;
+  }
+  
+  .recipe-rating {
+    font-size: 16px;
+    color: #6c6c6c;
+  }
+  
+  .view-recipe-button {
+    align-self: flex-end;
+    background-color: #5a5435;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-recipe-button:hover {
+    background-color: #3c3a25;
+  }
+  
