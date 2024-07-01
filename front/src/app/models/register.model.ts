@@ -1,4 +1,4 @@
-export interface User {
+export interface Register {
     _id: string,
     email: string,
     firstName: string,
@@ -6,7 +6,5 @@ export interface User {
     hash: string,
     salt: string,
     role: string,
-    image: string,
-    totalRecipeCount: number,
-    averageRating: number
+    image: string
 }
