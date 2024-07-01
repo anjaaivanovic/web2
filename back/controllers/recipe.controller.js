@@ -87,7 +87,7 @@ async (req, res) => {
 router.get("/", async (req, res) => {
     try{
         var recipe = await Recipe.findRecipeById(req.query.id, req.query.commentPage)
-        res.send({recipe: recipe})
+        res.send(recipe)
     }
     catch (err){
         console.log(err)

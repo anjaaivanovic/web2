@@ -48,10 +48,10 @@ var findRecipeById = async function(id, commentPage = 1) {
                 .lean();
 
             recipe.comments = comments ? comments.comments : [];
-
+            recipe.averageRating = averageRating
+            
             return {
                 recipe,
-                averageRating,
                 commentPagination: {
                     currentPage: commentPage,
                     totalPages: totalCommentPages,

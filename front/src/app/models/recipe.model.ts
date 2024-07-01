@@ -5,7 +5,7 @@ import { User } from "./user.model";
 export interface Recipe {
     _id: string,
     title: string;
-    owner: User;
+    owner: User|null;
     description: string;
     image?: string;
     ingredients: string[];
@@ -15,5 +15,6 @@ export interface Recipe {
     prepTime: number;
     cookTime: number;
     servingSize: number;
+    averageRating: number;
 }
   

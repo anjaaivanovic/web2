@@ -3,6 +3,7 @@ import { Environment } from '../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RecipeResponse } from '../models/recipeResponse.model';
+import { Recipe } from '../models/recipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,5 +29,10 @@ export class RecipeService {
     if (servingSize) params = params.set('servingSize', servingSize.toString());
 
     return this.httpClient.get<RecipeResponse>(`${this.url}/all`, { params });
+  }
+
+  getRecipe(recipeId: string): Observable<Recipe> {
+    var params = new HttpParams().set('id', recipeId)
+    return this.httpClient.get<Recipe>(`${this.url}`, {params})
   }
 }

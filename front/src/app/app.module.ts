@@ -7,13 +7,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { RecipeComponent } from './components/recipe/recipe.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
-    ProfileComponent
+    ProfileComponent,
+    RecipeComponent
   ],
   imports: [
     BrowserModule,
