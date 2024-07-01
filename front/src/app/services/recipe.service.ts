@@ -35,4 +35,8 @@ export class RecipeService {
     var params = new HttpParams().set('id', recipeId)
     return this.httpClient.get<Recipe>(`${this.url}`, {params})
   }
+
+  newRecipe(recipe: Recipe){
+    return this.httpClient.post(`${this.url}`, recipe);
+  }
 }

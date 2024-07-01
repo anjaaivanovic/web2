@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Login } from '../models/login.model';
 import { Register } from '../models/register.model';
 import { Token } from '../models/token.model';
-
+import { jwtDecode } from 'jwt-decode';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,5 +21,13 @@ export class AuthService {
 
   register(user: Register): Observable<string>{
     return this.httpClient.post<string>(`${this.url}/register`, user)
+  }
+
+  getDecodedAccessToken(token: string): any {
+    try {
+      return jwtDecode(token);
+    } catch(Error) {
+      return null;
+    }
   }
 }

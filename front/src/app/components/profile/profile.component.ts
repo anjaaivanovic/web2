@@ -6,6 +6,7 @@ import { Recipe } from '../../models/recipe.model';
 import { Pagination } from '../../models/pagination.model';
 import { RecipeService } from '../../services/recipe.service';
 import { SavedRecipeService } from '../../services/saved-recipe.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +15,7 @@ import { SavedRecipeService } from '../../services/saved-recipe.service';
 })
 export class ProfileComponent {
 
-  constructor (private profileService: ProfileService, private recipeService: RecipeService, private savedRecipeService: SavedRecipeService,private router: Router, private route: ActivatedRoute) {}
+  constructor (private profileService: ProfileService, private recipeService: RecipeService, private savedRecipeService: SavedRecipeService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
   user: User = {
     _id: "",
     averageRating: 0,
@@ -41,15 +42,32 @@ export class ProfileComponent {
     pageSize: 0,
     totalItems: 0
   }
-  token: string = ""
-
+  token: string | null  = null
+  recipe: Recipe = {
+    _id: "",
+    averageRating: 0,
+    categories: [],
+    comments: [],
+    cookTime: 0,
+    description: "",
+    ingredients: [],
+    owner: null,
+    prepTime: 0,
+    servingSize: 0,
+    steps: [],
+    title: "",
+  }
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       console.log(params["id"]);
       this.user._id = params["id"];
     });
 
-    if (this.token.length > 0) this.loadSavedRecipes();
+    this.token = localStorage.getItem("token")
+    if (this.token){
+      var id = this.authService.getDecodedAccessToken(this.token)
+      if (id == this.user._id) this.loadSavedRecipes();
+    } 
     this.loadPostedRecipes();
     this.loadProfile();
   }
@@ -95,6 +113,17 @@ export class ProfileComponent {
         }
       }
     )
+  }
+
+  newRecipe(){
+    
+    this.recipeService.newRecipe(this.recipe).subscribe({
+      next: (resp) => {
+        console.log(resp);
+      },
+      error: (err) =>
+        console.log(err)
+    })
   }
 
 }

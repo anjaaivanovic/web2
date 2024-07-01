@@ -15,13 +15,17 @@ export class LoginComponent {
     email: "",
     password: ""
   }
+  error: string = ""
 
   tryLogin(){
     this.authService.login(this.login).subscribe({
       next: (resp) => {
+        this.error = "";
         localStorage.setItem("token", resp.token);
+        this.router.navigate(['home']);
       },
       error: (err) => {
+        this.error = err;
         console.log(err)
       }
     })
