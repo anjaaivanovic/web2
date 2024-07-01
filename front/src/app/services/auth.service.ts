@@ -4,18 +4,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Login } from '../models/login.model';
 import { Register } from '../models/register.model';
+import { Token } from '../models/token.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private url = Environment.url;
+  private url = Environment.url + "/auth";
   constructor(private httpClient: HttpClient) { }
 
-  login(user: Login): Observable<string>
+  login(user: Login): Observable<Token>
   {
-    return this.httpClient.post<string>(`${this.url}/login`, user, {responseType: 'text' as 'json'})
+    return this.httpClient.post<Token>(`${this.url}/login`, user)
   }
 
   register(user: Register): Observable<string>{
