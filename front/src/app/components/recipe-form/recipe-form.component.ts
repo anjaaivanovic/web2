@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../services/category.service';
 import { Category } from '../../models/category.model';
 import { PostRecipe } from '../../models/postRecipe.model';
 import { RecipeService } from '../../services/recipe.service';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-form',
@@ -21,7 +22,7 @@ export class RecipeFormComponent {
   categories: Category[] = [];
   id = ""
 
-  constructor(private fb: FormBuilder, private modalService: ModalService, private categoryService: CategoryService, private recipeService: RecipeService, private authService: AuthService) {
+  constructor(private router: Router, private modalService: ModalService, private categoryService: CategoryService, private recipeService: RecipeService, private authService: AuthService) {
     this.modalService.modalVisibility.subscribe((isVisible: boolean) => {
       this.isVisible = isVisible;
     });
@@ -31,13 +32,13 @@ export class RecipeFormComponent {
     this.recipeForm = new FormGroup({
       title: new FormControl(null, Validators.required),
       description: new FormControl(null, Validators.required),
-      photo: new FormControl(null),
+      image: new FormControl(null),
       prepTime: new FormControl(null, Validators.required),
       cookTime: new FormControl(null, Validators.required),
       servingSize: new FormControl(null, Validators.required),
       ingredients: new FormArray([]),
       instructions: new FormArray([]),
-      category: new FormControl(null, Validators.required)
+      category: new FormControl(null, Validators.required),
     });
     var token = localStorage.getItem("token");
     if (token) this.id = this.authService.getDecodedAccessToken(token)._id;
@@ -89,9 +90,10 @@ export class RecipeFormComponent {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
+    console.log(file)
     if (file) {
       this.recipeForm.patchValue({
-        photo: file
+        image: file
       });
     }
   }
@@ -99,8 +101,7 @@ export class RecipeFormComponent {
   submitRecipe() {
     if (this.recipeForm.valid) {
       const formValue = this.recipeForm.value;
-      console.log(formValue.ingredients)
-      console.log(formValue.instructions)
+      
       const newRecipe: PostRecipe = {
         categories: formValue.category,
         averageRating: formValue.averageRating,
@@ -114,8 +115,16 @@ export class RecipeFormComponent {
         title: formValue.title,
         image: formValue.image
       }
+      console.log(newRecipe.image)
       this.recipeService.newRecipe(newRecipe).subscribe(response => {
-        console.log('Recipe saved', response);
+        var token = (<string>localStorage.getItem("token"))
+        if (this.router.url === '/home') {
+          this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(token)._id}`]).then(() => {
+            window.location.reload();
+          });
+        } else {
+          this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(token)._id}`]);
+        }
         this.closeModal();
       });
     }

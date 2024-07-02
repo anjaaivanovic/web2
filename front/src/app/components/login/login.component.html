@@ -6,7 +6,9 @@
                 <input type="email" [(ngModel)]="login.email" placeholder="Email address"><br>
                 <input type="password" [(ngModel)]="login.password" placeholder="Password"><br>
                 <button (click)="tryLogin()">Sign in</button><br><br>
-                <span>Don't have an account? <a [routerLink]="['/register']">Register now.</a></span>
+                <span>Don't have an account? <a [routerLink]="['/register']">Register now.</a></span><br>
+                <span *ngIf="errorMsg" class="text-danger">{{ errorMsg }}</span>
+                <br>Or<br><a [routerLink]="['/home']">Continue browsing without signing in.</a>
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
-export interface PostRecipe {
+export interface EditRecipe {
+    _id: string;
     title: string;
     owner: string;
     description: string;

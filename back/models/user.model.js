@@ -55,7 +55,7 @@ UserModel.register = async function(email, firstName, lastName, password)
             firstName:firstName,
             lastName:lastName,
             role: 1,
-            image: "../data/images/default.png"
+            image: "default.png"
         })
 
         user.savePassword(password)

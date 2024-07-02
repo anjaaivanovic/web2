@@ -5,6 +5,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { loggedOutGuard } from './guards/logged-out.guard';
 
 const routes: Routes = [
   {
@@ -21,11 +22,18 @@ const routes: Routes = [
   },
   {
     path: "login",
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [loggedOutGuard]
   },
   {
     path: "register",
-    component: RegisterComponent
+    component: RegisterComponent,
+    canActivate: [loggedOutGuard]
+  },
+  {
+    path: "",
+    redirectTo: "home",
+     pathMatch: 'full'
   },
   {
     path: "**",

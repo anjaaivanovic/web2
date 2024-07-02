@@ -6,6 +6,7 @@ import { RecipeResponse } from '../models/recipeResponse.model';
 import { Recipe } from '../models/recipe.model';
 import { SingleRecipeResponse } from '../models/singleRecipeResponse.model';
 import { PostRecipe } from '../models/postRecipe.model';
+import { EditRecipe } from '../models/editRecipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +52,25 @@ export class RecipeService {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     });
     return this.httpClient.delete(`${this.url}`, {params, headers});
+  }
+
+  editRecipe(id: string, recipe: PostRecipe){
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    var edit: EditRecipe = {
+      _id: id,
+      averageRating: 0,
+      categories: recipe.categories,
+      cookTime: recipe.cookTime,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      owner: recipe.owner,
+      prepTime: recipe.prepTime,
+      servingSize: recipe.servingSize,
+      steps: recipe.steps,
+      title: recipe.title
+    }
+    return this.httpClient.put(`${this.url}`, edit, {headers})
   }
 }

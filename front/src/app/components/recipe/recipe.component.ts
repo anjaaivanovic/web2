@@ -5,6 +5,8 @@ import { Recipe } from '../../models/recipe.model';
 import { Environment } from '../../environments/environment';
 import { Pagination } from '../../models/pagination.model';
 import { AuthService } from '../../services/auth.service';
+import { SavedRecipeService } from '../../services/saved-recipe.service';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-recipe',
@@ -12,7 +14,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './recipe.component.css'
 })
 export class RecipeComponent {
-  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
+  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private authService: AuthService, private router: Router, private savedRecipeService: SavedRecipeService, private modalService: ModalService) {}
   recipe: Recipe = {
     _id: "",
     categories: [],
@@ -40,10 +42,8 @@ export class RecipeComponent {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      console.log(params["id"]);
       this.recipe._id = params["id"];
     });
-
     this.loadRecipe();
   }
 
@@ -51,11 +51,15 @@ export class RecipeComponent {
     this.recipeService.getRecipe(this.recipe._id).subscribe(
       {
         next: (resp) => {
-          console.log(resp)
           this.recipe = resp.recipe
           this.recipe.averageRating = resp.averageRating
           this.pagination = resp.commentPagination
-          console.log(this.recipe)
+          var token = localStorage.getItem("token")
+          if (token) {
+            if (this.authService.getDecodedAccessToken(token)._id == this.recipe.owner?._id) {
+              this.owned = true;
+            }
+          }
         }
       }
     )
@@ -74,5 +78,26 @@ export class RecipeComponent {
       }
     })
   }
-}
 
+  saveRecipe(id: string){
+    var token = <string>localStorage.getItem("token")
+    var user = this.authService.getDecodedAccessToken(token)._id
+    this.savedRecipeService.saveRecipe(id, user).subscribe({
+      next: (resp) => {
+        if (resp) this.router.navigate(['/profile/' + user])
+        else console.log("nije")
+    },
+    error: (err) => {
+      console.log(err)
+    }
+  });
+  }
+
+  openModal() {
+    this.modalService.showModal();
+  }
+
+  editRecipe(){
+    
+  }
+}

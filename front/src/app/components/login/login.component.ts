@@ -15,17 +15,18 @@ export class LoginComponent {
     email: "",
     password: ""
   }
-  error: string = ""
+  errorMsg: string = ""
 
   tryLogin(){
     this.authService.login(this.login).subscribe({
       next: (resp) => {
-        this.error = "";
+        this.errorMsg = "";
         localStorage.setItem("token", resp.token);
         this.router.navigate(['home']);
       },
       error: (err) => {
-        this.error = err;
+        console.log("odje")
+        this.errorMsg = "Wrong credentials!"
         console.log(err)
       }
     })

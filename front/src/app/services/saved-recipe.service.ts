@@ -17,4 +17,11 @@ export class SavedRecipeService {
     });
     return this.httpClient.get<RecipeResponse>(`${this.url}/${id}`, {headers});
   }
+
+  saveRecipe(id: string, user: string){
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    return this.httpClient.post<RecipeResponse>(`${this.url}`, {recipeId: id, userId: user}, {headers});
+  }
 }

@@ -108,3 +108,15 @@ h1{
     font-size:36px;
     cursor: pointer;
 }
+
+.fa-bookmark{
+    margin-left: 30px;
+    font-size:36px;
+    cursor: pointer;
+}
+
+.fa-pencil{
+    margin-left: 30px;
+    font-size:36px;
+    cursor: pointer;
+}

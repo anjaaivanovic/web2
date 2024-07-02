@@ -30,4 +30,9 @@ export class AuthService {
       return null;
     }
   }
+
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    return !!token;
+  }
 }
