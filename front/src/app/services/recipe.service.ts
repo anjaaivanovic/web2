@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RecipeResponse } from '../models/recipeResponse.model';
 import { Recipe } from '../models/recipe.model';
+import { SingleRecipeResponse } from '../models/singleRecipeResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +32,9 @@ export class RecipeService {
     return this.httpClient.get<RecipeResponse>(`${this.url}/all`, { params });
   }
 
-  getRecipe(recipeId: string): Observable<Recipe> {
+  getRecipe(recipeId: string): Observable<SingleRecipeResponse> {
     var params = new HttpParams().set('id', recipeId)
-    return this.httpClient.get<Recipe>(`${this.url}`, {params})
+    return this.httpClient.get<SingleRecipeResponse>(`${this.url}`, {params})
   }
 
   newRecipe(recipe: Recipe){

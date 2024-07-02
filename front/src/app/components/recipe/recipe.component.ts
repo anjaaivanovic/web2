@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
 import { ActivatedRoute } from '@angular/router';
 import { Recipe } from '../../models/recipe.model';
+import { Environment } from '../../environments/environment';
+import { Pagination } from '../../models/pagination.model';
 
 @Component({
   selector: 'app-recipe',
@@ -24,7 +26,16 @@ export class RecipeComponent {
     title: "",
     averageRating: 0
   }
+  pagination: Pagination = {
+    currentPage: 1,
+    pageSize: 3,
+    totalItems: 0,
+    totalPages: 0
+  }
+
   token: string = ""
+  url = Environment.imagesUrl;
+  owned = false;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -39,7 +50,10 @@ export class RecipeComponent {
     this.recipeService.getRecipe(this.recipe._id).subscribe(
       {
         next: (resp) => {
-          this.recipe = resp
+          console.log(resp)
+          this.recipe = resp.recipe
+          this.recipe.averageRating = resp.averageRating
+          this.pagination = resp.commentPagination
           console.log(this.recipe)
         }
       }

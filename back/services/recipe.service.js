@@ -1,5 +1,6 @@
 const RecipeModel = require("../models/recipe.model")
 const RatingModel = require("../models/rating.model")
+const CommentModel = require("../models/comment.model")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
@@ -34,24 +35,26 @@ var findRecipeById = async function(id, commentPage = 1) {
             var recipe = await RecipeModel.findOne({ _id: id })
                 .populate('owner')
                 .populate('categories')
-                .lean();
 
             if (!recipe) return undefined;
 
-            const averageRating = await calculateAverageRating(id);
-            var totalComments = await RecipeModel.countDocuments({ _id: id, comments: { $exists: true, $not: { $size: 0 } } });
+            var averageRating = await calculateAverageRating(id)
+
+            var commentsQuery = CommentModel.find({ recipe: id })
+                .sort({ createdAt: -1 })
+                .skip((commentPage - 1) * commentsPerPage)
+                .limit(commentsPerPage)
+                .populate('user');
+
+            var comments = await commentsQuery;
+            var totalComments = await CommentModel.countDocuments({ recipe: id });
             var totalCommentPages = Math.ceil(totalComments / commentsPerPage);
 
-            var comments = await RecipeModel.findOne({ _id: id }, { comments: { $slice: [(commentPage - 1) * commentsPerPage, commentsPerPage] } })
-                .populate('comments')
-                .select('comments')
-                .lean();
-
-            recipe.comments = comments ? comments.comments : [];
-            recipe.averageRating = averageRating
-
+            recipe.comments = comments;
+            console.log(recipe)
             return {
                 recipe,
+                averageRating,
                 commentPagination: {
                     currentPage: commentPage,
                     totalPages: totalCommentPages,
@@ -71,7 +74,7 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
         if (userId && ObjectId.isValid(userId)) query.owner = userId;
         if (categories.length > 0) query.categories = { $in: categories };
         if (search) {
-            const regex = new RegExp(search, 'i'); 
+            const regex = new RegExp('\\b' + search, 'i'); 
             query.$or = [
                 { title: { $regex: regex } },
                 { description: { $regex: regex } }

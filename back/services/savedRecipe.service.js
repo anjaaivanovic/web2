@@ -14,7 +14,13 @@ async function findSavedRecipes(userId, page = 1, categories = [], search = '', 
             var query = { _id: { $in: recipeIds } };
 
             if (categories.length > 0) query.categories = { $in: categories };
-            if (search) query.$text = { $search: search };
+            if (search) {
+                const regex = new RegExp('\\b' + search, 'i'); 
+                query.$or = [
+                    { title: { $regex: regex } },
+                    { description: { $regex: regex } }
+                ];
+            }
             if (prepTime) query.prepTime = { $lte: prepTime };
             if (cookTime) query.cookTime = { $lte: cookTime };
             if (servingSize) query.servingSize = { $gte: servingSize };

@@ -1,1 +1,53 @@
-<p>recipe works!</p>
+<div class="container">
+    <app-header></app-header>
+    <div class="recipe-header">
+        <div class="info-header row" style="text-align: center;">
+            <div class="col info">Total time<br>
+                <div class="stats">{{recipe.prepTime + recipe.cookTime}}<span>mins</span></div>
+            </div>
+            <div class="col recipe">
+                <h1>{{recipe.title}}</h1><br>
+                <h2 [routerLink]="['/profile', recipe.owner?._id]" style="cursor: pointer;">{{recipe.owner?.firstName}} {{recipe.owner?.lastName}}</h2><br>
+                <img [src]="url.concat('/', recipe.image)"><br>
+                <span class="info">{{recipe.servingSize}} servings</span>
+            </div>
+            <div class="col info">
+                Recipe rating<br>
+                <div class="stats">{{recipe.averageRating}}<i class="fa fa-star"></i></div><br>
+                <button class="rate-recipe" *ngIf="!owned">Rate this recipe</button>
+            </div>
+        </div>
+    </div>
+    <div class="description">
+        <h1>Description</h1>
+        <p>{{recipe.description}}</p>
+    </div>
+    <div class="sec ingredients">
+        <h1>Ingredients</h1>
+        <div class="ingredients-list">
+            <ul>
+                <li *ngFor="let ingredient of recipe.ingredients">{{ingredient}}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="sec instructions">
+        <h1>Instructions</h1>
+        <div class="instructions-list">
+            <ol>
+                <li *ngFor="let step of recipe.steps">{{step}}</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="sec comments">
+        <h1>Comments ({{pagination.totalItems}})</h1>
+        <div class="comment-section">
+            <div *ngFor="let comment of recipe.comments">
+                <img [src]="url.concat('/default')">
+                <h1>{{comment.user.firstName}} {{comment.user.lastName}}</h1><br>
+                <p>{{comment.text}}</p>
+            </div>
+        </div>
+    </div>
+</div>
