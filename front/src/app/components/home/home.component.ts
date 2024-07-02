@@ -15,13 +15,20 @@ export class HomeComponent {
   constructor(private recipeService: RecipeService, private categoryService: CategoryService, private router: Router){}
   recipes: Recipe[] = []
   pagination: Pagination = {
-    currentPage: 0,
-    totalPages: 0,
+    currentPage: 1,
+    totalPages: 1,
     pageSize: 0,
     totalItems: 0
   }
   token: string | null = localStorage.getItem("token")
   categories: Category[] = []
+  specificUser: string|null = null
+  search = ""
+  prepTime : number | undefined = undefined
+  cookTime : number | undefined = undefined
+  servingSize : number | undefined = undefined
+  sort = "title"
+  order = "asc"
 
   ngOnInit(): void {
     this.loadRecipes();
@@ -29,7 +36,17 @@ export class HomeComponent {
   }
 
   loadRecipes() {
-    this.recipeService.allRecipes().subscribe(
+    this.recipeService.allRecipes(
+        this.specificUser,
+        this.pagination.currentPage,
+        this.categories.filter(x => x.selected).map(x => x._id),
+        this.search,
+        this.prepTime,
+        this.cookTime,
+        this.servingSize,
+        this.sort,
+        this.order
+      ).subscribe(
       {
         next: (resp) => {
           this.recipes = resp.recipes.data
@@ -63,20 +80,7 @@ export class HomeComponent {
 
   toggleCategorySelection(category: Category) {
     category.selected = !category.selected;
-    let selectedCategories = this.categories.filter(x => x.selected).map(category => category._id);
-    this.recipeService.allRecipes(null, 1, selectedCategories).subscribe(
-      {
-        next: (resp) => {
-          this.recipes = resp.recipes.data
-          this.pagination = resp.recipes.pagination
-          console.log(this.recipes)
-          console.log(this.pagination)
-        },
-        error: (error) => {
-          console.log(error)
-        }
-      }
-    )
+    this.loadRecipes();
   }
 
   totalPagesArray(): number[] {
@@ -86,20 +90,7 @@ export class HomeComponent {
   gotoPage(page: number): void {
     console.log('Navigating to page:', page);
     this.pagination.currentPage = page;
-    let selectedCategories = this.categories.filter(x => x.selected).map(category => category._id);
-    this.recipeService.allRecipes(null, this.pagination.currentPage, selectedCategories).subscribe(
-      {
-        next: (resp) => {
-          this.recipes = resp.recipes.data
-          this.pagination = resp.recipes.pagination
-          console.log(this.recipes)
-          console.log(this.pagination)
-        },
-        error: (error) => {
-          console.log(error)
-        }
-      }
-    )
+    this.loadRecipes();
   }
   
 }

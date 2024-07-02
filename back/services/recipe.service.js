@@ -68,10 +68,15 @@ var findRecipeById = async function(id, commentPage = 1) {
 var findRecipes = async function(userId, page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc') {
     try {
         var query = {};
-        
         if (userId && ObjectId.isValid(userId)) query.owner = userId;
         if (categories.length > 0) query.categories = { $in: categories };
-        if (search) query.$text = { $search: search };
+        if (search) {
+            const regex = new RegExp(search, 'i'); 
+            query.$or = [
+                { title: { $regex: regex } },
+                { description: { $regex: regex } }
+            ];
+        }
         if (prepTime) query.prepTime = { $lte: prepTime };
         if (cookTime) query.cookTime = { $lte: cookTime };
         if (servingSize) query.servingSize = { $gte: servingSize };
@@ -106,6 +111,7 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
         } else {
             recipesQuery = recipesQuery.sort(sortCriteria);
         }
+        console.log('Query:', recipesQuery);
 
         var recipes = await recipesQuery
         .skip((page - 1) * recipesPerPage)
