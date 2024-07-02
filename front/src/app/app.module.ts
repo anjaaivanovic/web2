@@ -10,9 +10,10 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { RecipeComponent } from './components/recipe/recipe.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent } from './components/card/card.component';
 import { CategoryCardComponent } from './components/category-card/category-card.component';
+import { RecipeFormComponent } from './components/recipe-form/recipe-form.component';
 
 @NgModule({
   declarations: [
@@ -24,13 +25,15 @@ import { CategoryCardComponent } from './components/category-card/category-card.
     LoginComponent,
     RegisterComponent,
     CardComponent,
-    CategoryCardComponent
+    CategoryCardComponent,
+    RecipeFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

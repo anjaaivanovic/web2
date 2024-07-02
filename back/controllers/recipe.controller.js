@@ -43,7 +43,8 @@ const upload = require('./config/multer-config');
 router.post("/", passport.authenticate('jwt', {session: false}), upload.single('image'),
 async (req, res) => {
     try{
-        req.body.image = req.file.filename
+        if (req.file) req.body.image = req.file.filename
+        else req.body.image = "default.png"
         var result = await Recipe.saveRecipe(req.body)
         if (result) res.send({result: result})
         else res.status(501).send()

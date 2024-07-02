@@ -1,5 +1,13 @@
-<p>login works!</p>
-<input type="email" [(ngModel)]="login.email" placeholder="Email address"><br>
-<input type="password" [(ngModel)]="login.password" placeholder="Password"><br>
-<button (click)="tryLogin()">Login</button><br>
-<div>{{error}}</div>
+<div class="bg">
+    <div class="container">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-4">
+                <h1>Sign in</h1>
+                <input type="email" [(ngModel)]="login.email" placeholder="Email address"><br>
+                <input type="password" [(ngModel)]="login.password" placeholder="Password"><br>
+                <button (click)="tryLogin()">Sign in</button><br><br>
+                <span>Don't have an account? <a [routerLink]="['/register']">Register now.</a></span>
+            </div>
+        </div>
+    </div>
+</div>

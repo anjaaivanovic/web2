@@ -12,7 +12,7 @@
                 <span class="info">{{recipe.servingSize}} servings</span>
             </div>
             <div class="col info">
-                Recipe rating<br>
+                Recipe rating<i class="fa fa-trash" *ngIf="owned" (click)="deleteRecipe(recipe._id);"></i><br>
                 <div class="stats">{{recipe.averageRating}}<i class="fa fa-star"></i></div><br>
                 <button class="rate-recipe" *ngIf="!owned">Rate this recipe</button>
             </div>
@@ -43,10 +43,14 @@
     <div class="sec comments">
         <h1>Comments ({{pagination.totalItems}})</h1>
         <div class="comment-section">
-            <div *ngFor="let comment of recipe.comments">
-                <img [src]="url.concat('/default')">
-                <h1>{{comment.user.firstName}} {{comment.user.lastName}}</h1><br>
-                <p>{{comment.text}}</p>
+            <div class="comment row" *ngFor="let comment of recipe.comments">
+                <div class="col-1">
+                    <img [src]="url.concat('/', comment.user.image)" [alt]="url.concat(comment.user.image)">
+                </div>
+                <div class="col">
+                    <h1>{{comment.user.firstName}} {{comment.user.lastName}}</h1><br>
+                    <p>{{comment.text}}</p>
+                </div>
             </div>
         </div>
     </div>

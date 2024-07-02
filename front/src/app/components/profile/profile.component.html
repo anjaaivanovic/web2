@@ -6,7 +6,7 @@
             <div class="col name">
                 {{user.firstName}} {{user.lastName}}<br>
                 <img [src]="url.concat('/', user.image)"><br>
-                <button *ngIf="displaySaved" class="post-recipe">+ Add recipe</button>
+                <button *ngIf="displaySaved" class="post-recipe" (click)="openModal()">+ Add recipe</button>
             </div>
             <div class="col info">Average rating<br><div class="stats">{{user.averageRating}}<i class="fa fa-star"></i></div></div>
         </div>
@@ -17,6 +17,13 @@
         <div class="posted-recipe-list">
             <app-card *ngFor="let recipe of postedRecipes" [recipe]="recipe"></app-card>
         </div>
+        <span *ngIf="postedPagination.totalPages > 1">
+            <span class="pagination-numbers">
+                <span *ngFor="let page of totalPagesArray(postedPagination)" class="page-number" [class.active]="page == postedPagination.currentPage" (click)="gotoPagePosted(page)">
+                  {{ page }}
+                </span>
+              </span>
+        </span>
     </div>
     <div *ngIf="displaySaved == true" class="recipes">
         <h1>Saved recipes</h1>
@@ -24,5 +31,13 @@
         <div class="saved-recipe-list">
             <app-card *ngFor="let recipe of savedRecipes" [recipe]="recipe"></app-card>
         </div>
+        <span *ngIf="postedPagination.totalPages > 1">
+            <span class="pagination-numbers">
+                <span *ngFor="let page of totalPagesArray(savedPagination)" class="page-number" [class.active]="page == savedPagination.currentPage" (click)="gotoPageSaved(page)">
+                  {{ page }}
+                </span>
+              </span>
+        </span>
     </div>
+    <app-recipe-form></app-recipe-form>
 </div>

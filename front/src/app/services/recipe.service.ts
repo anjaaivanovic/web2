@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Environment } from '../environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RecipeResponse } from '../models/recipeResponse.model';
 import { Recipe } from '../models/recipe.model';
 import { SingleRecipeResponse } from '../models/singleRecipeResponse.model';
+import { PostRecipe } from '../models/postRecipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,18 @@ export class RecipeService {
     return this.httpClient.get<SingleRecipeResponse>(`${this.url}`, {params})
   }
 
-  newRecipe(recipe: Recipe){
-    return this.httpClient.post(`${this.url}`, recipe);
+  newRecipe(recipe: PostRecipe){
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    return this.httpClient.post(`${this.url}`, recipe, {headers});
+  }
+
+  deleteRecipe(id: string){
+    var params = new HttpParams().set('id', id)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    return this.httpClient.delete(`${this.url}`, {params, headers});
   }
 }

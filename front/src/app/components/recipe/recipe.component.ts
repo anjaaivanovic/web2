@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Recipe } from '../../models/recipe.model';
 import { Environment } from '../../environments/environment';
 import { Pagination } from '../../models/pagination.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-recipe',
@@ -11,7 +12,7 @@ import { Pagination } from '../../models/pagination.model';
   styleUrl: './recipe.component.css'
 })
 export class RecipeComponent {
-  constructor(private recipeService: RecipeService, private route: ActivatedRoute) {}
+  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private authService: AuthService, private router: Router) {}
   recipe: Recipe = {
     _id: "",
     categories: [],
@@ -58,6 +59,20 @@ export class RecipeComponent {
         }
       }
     )
+  }
+
+  deleteRecipe(id: string){
+    this.recipeService.deleteRecipe(id).subscribe({
+      next: (resp) => {
+        if (resp) {
+          var token = localStorage.getItem("token")
+          if (token) this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(token)._id}`])
+        } 
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
   }
 }
 

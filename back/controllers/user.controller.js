@@ -91,7 +91,8 @@ router.delete("/", async (req, res) => {
 router.put("/", passport.authenticate('jwt', { session: false }), upload.single('image'),
 async (req, res) => {
     try {
-        req.body.image = req.file.filename
+        if (req.file) req.body.image = req.file.filename
+        else req.body.image = "default.png"
         var result = await User.updateUser(req.user._id, req.body);
         if (result) res.send({ user: result });
         else res.status(501).send();

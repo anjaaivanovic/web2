@@ -8,6 +8,8 @@ import { RecipeService } from '../../services/recipe.service';
 import { SavedRecipeService } from '../../services/saved-recipe.service';
 import { AuthService } from '../../services/auth.service';
 import { Environment } from '../../environments/environment';
+import { ModalService } from '../../services/modal.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +18,7 @@ import { Environment } from '../../environments/environment';
 })
 export class ProfileComponent {
 
-  constructor (private profileService: ProfileService, private recipeService: RecipeService, private savedRecipeService: SavedRecipeService, private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
+  constructor (private profileService: ProfileService, private recipeService: RecipeService, private savedRecipeService: SavedRecipeService, private authService: AuthService, private modalService: ModalService, private route: ActivatedRoute) {}
   user: User = {
     _id: "",
     averageRating: 0,
@@ -32,13 +34,13 @@ export class ProfileComponent {
   savedRecipes: Recipe[] = []
   postedRecipes: Recipe[] = []
   savedPagination: Pagination = {
-    currentPage: 0,
+    currentPage: 1,
     totalPages: 0,
     pageSize: 0,
     totalItems: 0
   }
   postedPagination: Pagination = {
-    currentPage: 0,
+    currentPage: 1,
     totalPages: 0,
     pageSize: 0,
     totalItems: 0
@@ -58,6 +60,16 @@ export class ProfileComponent {
     steps: [],
     title: "",
   }
+
+  categories: Category[] = []
+  specificUser: string|null = null
+  search = ""
+  prepTime : number | undefined = undefined
+  cookTime : number | undefined = undefined
+  servingSize : number | undefined = undefined
+  sort = "title"
+  order = "asc"
+
   displaySaved = false
   url = Environment.imagesUrl
 
@@ -95,7 +107,17 @@ export class ProfileComponent {
   }
 
   loadPostedRecipes() {
-    this.recipeService.allRecipes(this.user._id).subscribe(
+    this.recipeService.allRecipes(
+      this.user._id,
+      this.postedPagination.currentPage,
+      this.categories.filter(x => x.selected).map(x => x._id),
+      this.search,
+      this.prepTime,
+      this.cookTime,
+      this.servingSize,
+      this.sort,
+      this.order
+    ).subscribe(
       {
         next: (resp) => {
           this.postedRecipes = resp.recipes.data
@@ -124,15 +146,22 @@ export class ProfileComponent {
     )
   }
 
-  newRecipe(){
-    
-    this.recipeService.newRecipe(this.recipe).subscribe({
-      next: (resp) => {
-        console.log(resp);
-      },
-      error: (err) =>
-        console.log(err)
-    })
+  openModal() {
+    this.modalService.showModal();
   }
 
+  totalPagesArray(pagination: Pagination): number[] {
+    return Array(pagination.totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  gotoPagePosted(page: number): void {
+    console.log(page)
+    this.postedPagination.currentPage = page;
+    this.loadPostedRecipes();
+  }
+
+  gotoPageSaved(page: number): void {
+    this.savedPagination.currentPage = page;
+    this.loadSavedRecipes();
+  }
 }
