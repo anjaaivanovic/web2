@@ -7,6 +7,7 @@ import { Pagination } from '../../models/pagination.model';
 import { RecipeService } from '../../services/recipe.service';
 import { SavedRecipeService } from '../../services/saved-recipe.service';
 import { AuthService } from '../../services/auth.service';
+import { Environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -57,6 +58,9 @@ export class ProfileComponent {
     steps: [],
     title: "",
   }
+  displaySaved = false
+  url = Environment.imagesUrl
+
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       console.log(params["id"]);
@@ -66,13 +70,18 @@ export class ProfileComponent {
     this.token = localStorage.getItem("token")
     if (this.token){
       var id = this.authService.getDecodedAccessToken(this.token)
-      if (id == this.user._id) this.loadSavedRecipes();
+      if (id._id == this.user._id){
+        this.displaySaved = true;
+        console.log("ulg")
+      } 
     } 
     this.loadPostedRecipes();
+    this.loadSavedRecipes();
     this.loadProfile();
   }
 
   loadSavedRecipes() {
+    if (!this.displaySaved) return;
     this.savedRecipeService.savedRecipes(this.user._id).subscribe(
       {
         next: (resp) => {

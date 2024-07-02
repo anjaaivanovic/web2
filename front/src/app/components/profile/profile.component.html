@@ -1,2 +1,28 @@
-<app-header></app-header>
-<p>profile works!</p>
+<div class="container">
+    <app-header></app-header>
+    <div class="profile-header">
+        <div class="info-header row" style="text-align: center;">
+            <div class="col info">Recipes posted<br><div class="stats">{{postedPagination.totalItems}}</div></div>
+            <div class="col name">
+                {{user.firstName}} {{user.lastName}}<br>
+                <img [src]="url.concat('/', user.image)"><br>
+                <button *ngIf="displaySaved" class="post-recipe">+ Add recipe</button>
+            </div>
+            <div class="col info">Average rating<br><div class="stats">{{user.averageRating}}<i class="fa fa-star"></i></div></div>
+        </div>
+    </div>
+    <div class="recipes">
+        <h1>Posted recipes</h1>
+        <span *ngIf="postedRecipes.length == 0">No posted recipes!<br></span>
+        <div class="posted-recipe-list">
+            <app-card *ngFor="let recipe of postedRecipes" [recipe]="recipe"></app-card>
+        </div>
+    </div>
+    <div *ngIf="displaySaved == true" class="recipes">
+        <h1>Saved recipes</h1>
+        <span *ngIf="savedRecipes.length == 0">No saved recipes!</span>
+        <div class="saved-recipe-list">
+            <app-card *ngFor="let recipe of savedRecipes" [recipe]="recipe"></app-card>
+        </div>
+    </div>
+</div>

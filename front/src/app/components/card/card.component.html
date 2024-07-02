@@ -3,10 +3,10 @@
     <img [src]="url.concat('/', recipe.image)" alt="{{ recipe.title }}" class="recipe-image">
     <div class="recipe-details">
       <div class="recipe-header">
-        <span class="recipe-title">{{ recipe.title }}</span>
+        <span class="recipe-title" [routerLink]="['/recipe', recipe._id]" style="cursor:pointer">{{ recipe.title }}</span>
         <span class="recipe-rating">{{ recipe.averageRating }} <i class="fa fa-star"></i></span>
       </div>
-      <p class="recipe-author">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</p>
+      <p class="recipe-author" [routerLink]="['/profile', recipe.owner._id]" style="cursor:pointer">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</p>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div class="recipe-footer">
         <span class="recipe-time"><i class="fa fa-clock-o"></i> {{ recipe.prepTime + recipe.cookTime }}min</span>

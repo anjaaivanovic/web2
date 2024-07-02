@@ -111,7 +111,6 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
         } else {
             recipesQuery = recipesQuery.sort(sortCriteria);
         }
-        console.log('Query:', recipesQuery);
 
         var recipes = await recipesQuery
         .skip((page - 1) * recipesPerPage)
