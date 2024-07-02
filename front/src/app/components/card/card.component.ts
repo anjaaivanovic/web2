@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-card',
@@ -7,5 +8,5 @@ import { Component, Input } from '@angular/core';
 })
 export class CardComponent {
   @Input() recipe: any;
-  url: string = "http://localhost:3000/images"
+  url = Environment.imagesUrl
 }

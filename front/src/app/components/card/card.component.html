@@ -1,18 +1,17 @@
 <div class="card">
-    <div class="card-content">
-      <img [src]="url.concat('/', recipe.image)" alt="{{ recipe.title }}" class="recipe-image">
-      <div class="recipe-details">
-        <div class="recipe-header">
-          <h2 class="recipe-title">{{ recipe.title }}</h2>
-          <p class="recipe-author">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</p>
-        </div>
-        <p class="recipe-description">{{ recipe.description }}</p>
-        <div class="recipe-footer">
-          <span class="recipe-time"><i class="fa fa-clock-o"></i> {{ recipe.prepTime + recipe.cookTime }}</span>
-          <span class="recipe-rating">{{ recipe.averageRating }}<i class="fa fa-star"></i></span>
-        </div>
+  <div class="card-content">
+    <img [src]="url.concat('/', recipe.image)" alt="{{ recipe.title }}" class="recipe-image">
+    <div class="recipe-details">
+      <div class="recipe-header">
+        <span class="recipe-title">{{ recipe.title }}</span>
+        <span class="recipe-rating">{{ recipe.averageRating }} <i class="fa fa-star"></i></span>
+      </div>
+      <p class="recipe-author">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</p>
+      <p class="recipe-description">{{ recipe.description }}</p>
+      <div class="recipe-footer">
+        <span class="recipe-time"><i class="fa fa-clock-o"></i> {{ recipe.prepTime + recipe.cookTime }}min</span>
+        <a [routerLink]="['/recipe', recipe._id]" class="view-recipe-button">View recipe >></a>
       </div>
     </div>
-    <a [routerLink]="['/recipe', recipe._id]" class="view-recipe-button">view recipe >></a>
   </div>
-  
+</div>

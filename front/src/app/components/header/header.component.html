@@ -1,7 +1,11 @@
-<div>
-    <a routerLink="/home">Home</a>
-    <a *ngIf="this.token != null" [routerLink]="['/profile', id]">Profile</a>
-    <a routerLink="/register">Register</a>
-    <a routerLink="/login">Login</a>
-    <button *ngIf="this.token != null" (click)="logout()">Logout</button>
-</div>
+<div class="nav-container">
+    <div class="left-links">
+      <a routerLink="/home">Home</a>
+      <a *ngIf="token != null" [routerLink]="['/profile', id]">Profile</a>
+    </div>
+    <div class="right-links">
+      <a *ngIf="token == null" routerLink="/login">Sign in</a>
+      <span *ngIf="token != null" (click)="logout()">Logout</span>
+    </div>
+  </div>
+  

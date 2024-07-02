@@ -21,6 +21,12 @@ export class HeaderComponent {
 
   logout(): void {
     localStorage.removeItem("token")
-    this.router.navigate(["home"])
+    if (this.router.url === '/home') {
+      this.router.navigate(['/home']).then(() => {
+        window.location.reload();
+      });
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 }

@@ -1,0 +1,72 @@
+.home-header{
+    background-color: rgba(251, 194, 153, 0.7);
+    height: 28vh;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    position: relative;
+}
+
+.home-header img{
+    position: absolute;
+  right: 0;
+  bottom: -7.5vh; 
+  width: 36vh;
+}
+
+.header-left {
+    padding: 25px;
+}
+
+.header-left h1 {
+    font-size: 32px;
+    color: #3D4113;
+    font-weight: normal;
+}
+
+.header-left input {
+    margin-top: 20px;
+    width: 55vh;
+    border-radius: 12px;
+    color: #3D4113;
+    font-weight: normal;
+    padding: 5px;
+    padding-left: 10px;
+    background-color: #FEEBDE;
+    border: 0px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-left input:focus {
+    transition: 0.2s;
+    outline: none;
+    box-shadow: 7px 7px 10px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-list{
+    margin-top: 5vh;
+}
+
+.category-list{
+    margin-top: 5vh;
+    display: flex;
+  gap: 20px;
+}
+
+.pagination-numbers {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .page-number {
+    margin: 0 10px; 
+    cursor: pointer;
+    font-size: 24px;
+    color: black;
+  }
+  
+  .page-number.active {
+    font-weight: bold;
+    color: black;
+  }

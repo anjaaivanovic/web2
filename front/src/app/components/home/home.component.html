@@ -1,7 +1,27 @@
-<app-header></app-header>
-
 <div class="container">
+    <app-header></app-header>
+    
+    <div class="home-header">
+        <div class="header-left">
+            <h1>Flavors That Speak Louder Than Words:<br> Let's Get Cooking!</h1>
+            <input type="text" placeholder="Search recipes by name or description">
+        </div>
+        
+        <img src="http://localhost:3000/images/header.png" alt="header">
+    </div>
+
+    <div class="category-list">
+        <app-category-card *ngFor="let category of categories" [category]="category" (click)="toggleCategorySelection(category)"></app-category-card>
+    </div>
+    
     <div class="recipe-list">
         <app-card *ngFor="let recipe of recipes" [recipe]="recipe"></app-card>
     </div>
+    <span *ngIf="pagination.totalPages > 1">
+        <span class="pagination-numbers">
+            <span *ngFor="let page of totalPagesArray()" class="page-number" [class.active]="page == pagination.currentPage" (click)="gotoPage(page)">
+              {{ page }}
+            </span>
+          </span>
+    </span>
 </div>
