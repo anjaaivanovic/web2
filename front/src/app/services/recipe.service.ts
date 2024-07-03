@@ -3,10 +3,10 @@ import { Environment } from '../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RecipeResponse } from '../models/recipeResponse.model';
-import { Recipe } from '../models/recipe.model';
 import { SingleRecipeResponse } from '../models/singleRecipeResponse.model';
 import { PostRecipe } from '../models/postRecipe.model';
 import { EditRecipe } from '../models/editRecipe.model';
+import { PostRating } from '../models/postRating.model';
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +72,12 @@ export class RecipeService {
       title: recipe.title
     }
     return this.httpClient.put(`${this.url}`, edit, {headers})
+  }
+
+  rateRecipe(rating: PostRating){
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    return this.httpClient.post(`${this.url}/rate`, rating, {headers})
   }
 }

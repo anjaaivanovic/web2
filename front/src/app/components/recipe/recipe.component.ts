@@ -9,6 +9,7 @@ import { SavedRecipeService } from '../../services/saved-recipe.service';
 import { ModalService } from '../../services/modal.service';
 import { CommentService } from '../../services/comment.service';
 import { PostComment } from '../../models/postComment.model';
+import { PostRating } from '../../models/postRating.model';
 
 @Component({
   selector: 'app-recipe',
@@ -44,6 +45,7 @@ export class RecipeComponent {
   url = Environment.imagesUrl;
   owned = false;
   saved = false;
+  rating = 0;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -156,6 +158,22 @@ export class RecipeComponent {
       error: (err) => {
         console.log(err)
       }
+    })
+  }
+
+  rate(){
+    var r: PostRating = {
+      rating: this.rating,
+      recipe: this.recipe._id,
+      user: this.authService.getDecodedAccessToken(<string>localStorage.getItem("token"))._id
+    }
+    this.recipeService.rateRecipe(r).subscribe({
+      next: (resp) => {
+        if (resp) window.location.reload()
+      },
+    error: (err) => {
+      console.log(err)
+    }
     })
   }
 }

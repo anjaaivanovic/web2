@@ -172,7 +172,6 @@ async (req, res) => {
 router.get("/saved/try", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
-        console.log('AAA')
         var saved = await SavedRecipe.checkSaved(req.query.userId, req.query.recipeId)
         console.log(saved)
         res.send({saved: saved})
