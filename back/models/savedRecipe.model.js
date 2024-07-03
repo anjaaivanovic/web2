@@ -11,7 +11,6 @@ var SavedRecipeModel = mongoose.model("savedRecipe", SavedRecipeSchema)
 
 SavedRecipeModel.saveRecipe = async function(savedRecipe)
 {
-    console.log(savedRecipe)
     var newsavedRecipe = new SavedRecipeModel(savedRecipe)
     var res = await newsavedRecipe.save()
 

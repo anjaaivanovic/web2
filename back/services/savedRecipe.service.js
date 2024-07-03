@@ -120,8 +120,23 @@ var unsave = async function(userId, recipeId)
     catch (err) { throw err }
 }
 
+var checkSaved = async function (userId, recipeId){
+    try {
+        if (ObjectId.isValid(userId) && ObjectId.isValid(recipeId)) {
+          const count = await SavedRecipeModel.countDocuments({ userId: userId, recipeId: recipeId });
+          console.log(count)
+          return count > 0;
+        }
+        return false;
+      } catch (error) {
+        console.error('Error checking saved recipe:', error);
+        throw error;
+      }
+}
+
 module.exports = {
     findSavedRecipes,
     save,
-    unsave
+    unsave,
+    checkSaved
 }

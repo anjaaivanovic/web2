@@ -51,8 +51,6 @@ export class HomeComponent {
         next: (resp) => {
           this.recipes = resp.recipes.data
           this.pagination = resp.recipes.pagination
-          console.log(this.recipes)
-          console.log(this.pagination)
         },
         error: (error) => {
           console.log(error)

@@ -110,7 +110,7 @@ router.post("/", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
         var result = await SavedRecipe.save(req.body)
-        if (result) res.send({result: result})
+        if (result) res.send({success: result})
         else res.status(501).send()
     }
     catch (err) {
@@ -160,8 +160,22 @@ async (req, res) => {
 router.delete("/", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
-        var succes = await SavedRecipe.unsave(req.query.userId, req.query.recipeId)
-        res.send({success: succes})
+        var success = await SavedRecipe.unsave(req.query.userId, req.query.recipeId)
+        res.send({success: success})
+    }
+    catch (err){
+        console.log(err)
+        res.status(501).send({err: err})
+    }
+})
+
+router.get("/saved/try", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
+    try{
+        console.log('AAA')
+        var saved = await SavedRecipe.checkSaved(req.query.userId, req.query.recipeId)
+        console.log(saved)
+        res.send({saved: saved})
     }
     catch (err){
         console.log(err)

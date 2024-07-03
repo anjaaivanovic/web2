@@ -51,7 +51,6 @@ var findRecipeById = async function(id, commentPage = 1) {
             var totalCommentPages = Math.ceil(totalComments / commentsPerPage);
 
             recipe.comments = comments;
-            console.log(recipe)
             return {
                 recipe,
                 averageRating,

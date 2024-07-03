@@ -43,7 +43,6 @@ var jwtOptions = {
 
 passport.use(new passportJwt.Strategy(jwtOptions, async function(jwt_payload,done){
     var user = await UserModel.findById(jwt_payload._id)
-    console.log(jwt_payload)
     if (!user)
     {
         done(null, null, {

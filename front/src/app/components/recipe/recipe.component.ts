@@ -8,7 +8,6 @@ import { AuthService } from '../../services/auth.service';
 import { SavedRecipeService } from '../../services/saved-recipe.service';
 import { ModalService } from '../../services/modal.service';
 import { CommentService } from '../../services/comment.service';
-import { Comment } from '../../models/comment.model';
 import { PostComment } from '../../models/postComment.model';
 
 @Component({
@@ -44,6 +43,7 @@ export class RecipeComponent {
   token: string = ""
   url = Environment.imagesUrl;
   owned = false;
+  saved = false;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -65,6 +65,7 @@ export class RecipeComponent {
               this.owned = true;
             }
           }
+          this.checkSaved()
         }
       }
     )
@@ -89,7 +90,7 @@ export class RecipeComponent {
     var user = this.authService.getDecodedAccessToken(token)._id
     this.savedRecipeService.saveRecipe(id, user).subscribe({
       next: (resp) => {
-        if (resp) this.router.navigate(['/profile/' + user])
+        if (resp.success) window.location.reload()
         else console.log("nije")
     },
     error: (err) => {
@@ -98,6 +99,19 @@ export class RecipeComponent {
   });
   }
 
+  unsaveRecipe(id: string){
+    var token = <string>localStorage.getItem("token")
+    var user = this.authService.getDecodedAccessToken(token)._id
+    this.savedRecipeService.unsaveRecipe(id, user).subscribe({
+      next: (resp) => {
+        if (resp.success) window.location.reload()
+        else console.log("nije")
+    },
+    error: (err) => {
+      console.log(err)
+    }
+  });
+  }
   openModal() {
     this.modalService.showModal();
   }
@@ -130,5 +144,18 @@ export class RecipeComponent {
     console.log(page)
     this.pagination.currentPage = page;
     this.loadRecipe();
+  }
+
+  checkSaved(){
+    this.savedRecipeService.checkSaved(this.authService.getDecodedAccessToken(<string>localStorage.getItem("token"))._id, this.recipe._id).subscribe({
+      next: (resp) => {
+        console.log(resp)
+        this.saved = resp.saved;
+        console.log(this.saved)
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
   }
 }
