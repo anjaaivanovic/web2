@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RecipeService } from '../../services/recipe.service';
 import { Recipe } from '../../models/recipe.model';
 import { Pagination } from '../../models/pagination.model';
-import { Router } from '@angular/router';
 import { Category } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,7 @@ import { CategoryService } from '../../services/category.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  constructor(private recipeService: RecipeService, private categoryService: CategoryService, private router: Router){}
+  constructor(private recipeService: RecipeService, private categoryService: CategoryService, private authService: AuthService){}
   recipes: Recipe[] = []
   pagination: Pagination = {
     currentPage: 1,
@@ -36,6 +36,10 @@ export class HomeComponent {
   }
 
   loadRecipes() {
+    var token = localStorage.getItem("token");
+    var home = null;
+    if (token) home = this.authService.getDecodedAccessToken(token)._id;
+
     this.recipeService.allRecipes(
         this.specificUser,
         this.pagination.currentPage,
@@ -45,7 +49,8 @@ export class HomeComponent {
         this.cookTime,
         this.servingSize,
         this.sort,
-        this.order
+        this.order,
+        home
       ).subscribe(
       {
         next: (resp) => {

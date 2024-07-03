@@ -17,7 +17,7 @@ export class RecipeService {
   constructor(private httpClient: HttpClient) { }
 
   allRecipes(userId: string | null = null, page: number = 1, categories: string[] = [], search: string = '', prepTime?: number,
-              cookTime?: number, servingSize?: number, sort: string = 'title', order: string = 'asc'
+              cookTime?: number, servingSize?: number, sort: string = 'title', order: string = 'asc', home : string | null = null
   ): Observable<RecipeResponse>{
     let params = new HttpParams()
       .set('page', page.toString())
@@ -30,6 +30,7 @@ export class RecipeService {
     if (prepTime) params = params.set('prepTime', prepTime.toString());
     if (cookTime) params = params.set('cookTime', cookTime.toString());
     if (servingSize) params = params.set('servingSize', servingSize.toString());
+    if (home) params = params.set('home', <string>home);
 
     return this.httpClient.get<RecipeResponse>(`${this.url}/all`, { params });
   }

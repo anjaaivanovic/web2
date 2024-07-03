@@ -148,7 +148,7 @@ router.get("/", async (req, res) => {
 router.get("/all", async (req, res) => {
     try{
         var categories = req.query.categories ? req.query.categories.split(',') : [];
-        var recipes = await Recipe.findRecipes(req.query.userId, req.query.page, categories, req.query.search, req.query.prepTime, req.query.cookTime, req.query.servingSize, req.query.sort, req.query.order)
+        var recipes = await Recipe.findRecipes(req.query.userId, req.query.page, categories, req.query.search, req.query.prepTime, req.query.cookTime, req.query.servingSize, req.query.sort, req.query.order, req.query.home)
         res.send({recipes: recipes})
     }
     catch (err){

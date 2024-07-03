@@ -53,7 +53,7 @@ var findRecipeById = async function(id, commentPage = 1) {
     } catch (err) { throw err; }
 }
 
-var findRecipes = async function(userId, page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc') {
+var findRecipes = async function(userId, page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc', home = null) {
     try {
         var query = {};
         if (userId && ObjectId.isValid(userId)) query.owner = userId;
@@ -61,13 +61,13 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
         if (search) {
             const regex = new RegExp('\\b' + search, 'i'); 
             query.$or = [
-                { title: { $regex: regex } },
-                { description: { $regex: regex } }
+                { title: { $regex: regex } }
             ];
         }
         if (prepTime) query.prepTime = { $lte: prepTime };
         if (cookTime) query.cookTime = { $lte: cookTime };
         if (servingSize) query.servingSize = { $gte: servingSize };
+        if (home) query.owner = { $ne: home };
 
         var sortCriteria = {};
         var sortByRating = false;
