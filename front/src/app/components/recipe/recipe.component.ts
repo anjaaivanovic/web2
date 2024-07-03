@@ -7,6 +7,9 @@ import { Pagination } from '../../models/pagination.model';
 import { AuthService } from '../../services/auth.service';
 import { SavedRecipeService } from '../../services/saved-recipe.service';
 import { ModalService } from '../../services/modal.service';
+import { CommentService } from '../../services/comment.service';
+import { Comment } from '../../models/comment.model';
+import { PostComment } from '../../models/postComment.model';
 
 @Component({
   selector: 'app-recipe',
@@ -14,7 +17,7 @@ import { ModalService } from '../../services/modal.service';
   styleUrl: './recipe.component.css'
 })
 export class RecipeComponent {
-  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private authService: AuthService, private router: Router, private savedRecipeService: SavedRecipeService, private modalService: ModalService) {}
+  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private authService: AuthService, private router: Router, private savedRecipeService: SavedRecipeService, private modalService: ModalService, private commentService: CommentService) {}
   recipe: Recipe = {
     _id: "",
     categories: [],
@@ -36,6 +39,8 @@ export class RecipeComponent {
     totalPages: 0
   }
 
+  text = ""
+
   token: string = ""
   url = Environment.imagesUrl;
   owned = false;
@@ -48,7 +53,7 @@ export class RecipeComponent {
   }
 
   loadRecipe(){
-    this.recipeService.getRecipe(this.recipe._id).subscribe(
+    this.recipeService.getRecipe(this.recipe._id, this.pagination.currentPage).subscribe(
       {
         next: (resp) => {
           this.recipe = resp.recipe
@@ -98,6 +103,32 @@ export class RecipeComponent {
   }
 
   editRecipe(){
-    
+  }
+
+  comment(){
+    var comm: PostComment = {
+      recipe: this.recipe._id,
+      text: this.text,
+      user: this.authService.getDecodedAccessToken(<string>localStorage.getItem("token"))._id
+    }
+    this.commentService.postComment(comm).subscribe({
+      next: (resp) => {
+        if (resp) window.location.reload();
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
+  
+  totalPagesArray(pagination: Pagination): number[] {
+    return Array(pagination.totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  gotoPage(page: number): void {
+    console.log(page)
+    this.pagination.currentPage = page;
+    this.loadRecipe();
   }
 }

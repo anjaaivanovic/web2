@@ -40,6 +40,14 @@
         </div>
     </div>
 
+    <div class="sec leave-comment">
+        <h1>Leave a comment</h1>
+        <div class="new-comment">
+           <textarea class="form-control" [(ngModel)]="text" placeholder="Write your comment here..."></textarea>
+           <i class="fa fa-send" (click)="comment()"></i>
+        </div>
+    </div>
+
     <div class="sec comments">
         <h1>Comments ({{pagination.totalItems}})</h1>
         <div class="comment-section">
@@ -52,6 +60,13 @@
                     <p>{{comment.text}}</p>
                 </div>
             </div>
+            <span *ngIf="pagination.totalPages > 1">
+                <span class="pagination-numbers">
+                    <span *ngFor="let page of totalPagesArray(pagination)" class="page-number" [class.active]="page == pagination.currentPage" (click)="gotoPage(page)">
+                      {{ page }}
+                    </span>
+                  </span>
+            </span>
         </div>
     </div>
     <app-recipe-form [recipe]="recipe"></app-recipe-form>

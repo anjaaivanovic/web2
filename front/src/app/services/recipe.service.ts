@@ -34,8 +34,8 @@ export class RecipeService {
     return this.httpClient.get<RecipeResponse>(`${this.url}/all`, { params });
   }
 
-  getRecipe(recipeId: string): Observable<SingleRecipeResponse> {
-    var params = new HttpParams().set('id', recipeId)
+  getRecipe(recipeId: string, page: number): Observable<SingleRecipeResponse> {
+    var params = new HttpParams().set('id', recipeId).set('commentPage', page)
     return this.httpClient.get<SingleRecipeResponse>(`${this.url}`, {params})
   }
 
