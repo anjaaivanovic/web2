@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const Recipe = require("../services/recipe.service")
+const Rating = require("../services/recipe.service")
 const passport = require("./config/passport-config")
 const upload = require('./config/multer-config'); 
 
@@ -220,6 +221,18 @@ router.post("/rate", passport.authenticate('jwt', { session: false }), async (re
     catch (err){
         console.log(err);
         res.status(501).send({ err: err });
+    }
+})
+
+router.get("/rated/try", passport.authenticate('jwt', {session: false}),
+async (req, res) => {
+    try{
+        var rated = await Recipe.checkRated(req.user._id, req.query.recipeId)
+        res.send({rated: rated})
+    }
+    catch (err){
+        console.log(err)
+        res.status(501).send({err: err})
     }
 })
 

@@ -160,7 +160,7 @@ async (req, res) => {
 router.delete("/", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
-        var success = await SavedRecipe.unsave(req.query.userId, req.query.recipeId)
+        var success = await SavedRecipe.unsave(req.user_id, req.query.recipeId)
         res.send({success: success})
     }
     catch (err){
@@ -172,8 +172,7 @@ async (req, res) => {
 router.get("/saved/try", passport.authenticate('jwt', {session: false}),
 async (req, res) => {
     try{
-        var saved = await SavedRecipe.checkSaved(req.query.userId, req.query.recipeId)
-        console.log(saved)
+        var saved = await SavedRecipe.checkSaved(req.user._id, req.query.recipeId)
         res.send({saved: saved})
     }
     catch (err){

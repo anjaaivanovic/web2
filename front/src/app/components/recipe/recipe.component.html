@@ -14,7 +14,7 @@
             <div class="col info">
                 Recipe rating<i class="fa fa-trash" *ngIf="owned" (click)="deleteRecipe(recipe._id);"></i><i *ngIf="!owned && saved" (click)="unsaveRecipe(recipe._id);" class="fa fa-bookmark"></i><i *ngIf="!owned && !saved" (click)="saveRecipe(recipe._id);" class="fa fa-bookmark-o"></i><br>
                 <div class="stats">{{recipe.averageRating}}<i class="fa fa-star"></i></div><br>
-                <button class="rate-recipe" *ngIf="!owned"  data-bs-toggle="modal" data-bs-target="#myModal">Rate this recipe</button>
+                <button class="rate-recipe" *ngIf="!owned && !rated"  data-bs-toggle="modal" data-bs-target="#myModal">Rate this recipe</button>
             </div>
         </div>
     </div>

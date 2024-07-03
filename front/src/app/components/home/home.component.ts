@@ -67,7 +67,6 @@ export class HomeComponent {
             ...category,
             isSelected: false
           }));
-          console.log(this.categories)
         },
         error: (error) => {
           console.log(error)
@@ -86,7 +85,6 @@ export class HomeComponent {
   }
 
   gotoPage(page: number): void {
-    console.log('Navigating to page:', page);
     this.pagination.currentPage = page;
     this.loadRecipes();
   }

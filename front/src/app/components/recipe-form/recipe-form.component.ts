@@ -54,7 +54,6 @@ export class RecipeFormComponent {
             ...category,
             isSelected: false
           }));
-          console.log(this.categories)
         },
         error: (error) => {
           console.log(error)

@@ -18,7 +18,7 @@ const swaggerUi = require("swagger-ui-express")
 const app = express()
 
 const corsOptions = {
-  origin: "http://localhost:4200",
+  origin: ["http://localhost:4200", "http://localhost:8000", "http://localhost:8080"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
@@ -46,6 +46,7 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions)
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+app.use('/front', express.static(path.join(__dirname, 'front')));
 
 mongoose.connect(config.dbConnection).then( () => {
     console.log("Db connection successful!")

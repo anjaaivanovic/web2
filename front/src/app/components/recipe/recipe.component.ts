@@ -45,6 +45,7 @@ export class RecipeComponent {
   url = Environment.imagesUrl;
   owned = false;
   saved = false;
+  rated = false;
   rating = 0;
 
   ngOnInit(): void {
@@ -67,7 +68,8 @@ export class RecipeComponent {
               this.owned = true;
             }
           }
-          this.checkSaved()
+          this.checkSaved();
+          this.checkRated();
         }
       }
     )
@@ -143,17 +145,14 @@ export class RecipeComponent {
   }
 
   gotoPage(page: number): void {
-    console.log(page)
     this.pagination.currentPage = page;
     this.loadRecipe();
   }
 
   checkSaved(){
-    this.savedRecipeService.checkSaved(this.authService.getDecodedAccessToken(<string>localStorage.getItem("token"))._id, this.recipe._id).subscribe({
+    this.savedRecipeService.checkSaved(this.recipe._id).subscribe({
       next: (resp) => {
-        console.log(resp)
         this.saved = resp.saved;
-        console.log(this.saved)
       },
       error: (err) => {
         console.log(err)
@@ -174,6 +173,17 @@ export class RecipeComponent {
     error: (err) => {
       console.log(err)
     }
+    })
+  }
+
+  checkRated(){
+    this.recipeService.checkRated(this.recipe._id).subscribe({
+      next: (resp) => {
+        this.rated = resp.rated;
+      },
+      error: (err) => {
+        console.log(err)
+      }
     })
   }
 }

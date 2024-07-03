@@ -1,6 +1,6 @@
 const UserModel = require("../models/user.model")
 const RecipeModel = require("../models/recipe.model")
-const RatingModel = require("../models/rating.model")
+const HelperService = require("../services/helper.service")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var register = async function(email, firstName, lastName, password)
@@ -12,30 +12,6 @@ var register = async function(email, firstName, lastName, password)
     catch(err) { throw err }
 }
 
-async function calculateAverageRatingForUserRecipes(userId) {
-    try {
-        const recipes = await RecipeModel.find({ owner: userId }, '_id');
-
-        if (recipes.length === 0) {
-            return 0;
-        } else {
-            const recipeIds = recipes.map(recipe => recipe._id);
-            const ratings = await RatingModel.find({ recipe: { $in: recipeIds } });
-
-            if (ratings.length === 0) {
-                return 0;
-            } else {
-                // Calculate average rating
-                const totalRating = ratings.reduce((sum, rating) => sum + rating.rating, 0);
-                const averageRating = totalRating / ratings.length;
-                return averageRating;
-            }
-        }
-    } catch (err) {
-        throw err;
-    }
-}
-
 var getProfile = async function(id){
     try{
         if (ObjectId.isValid(id))
@@ -43,7 +19,7 @@ var getProfile = async function(id){
             var user = await UserModel.findOne({ _id: id });
             if (!user) return undefined;
 
-            const averageRating = await calculateAverageRatingForUserRecipes(id);
+            const averageRating = await HelperService.totalAverage(id);
             const totalRecipeCount = await RecipeModel.countDocuments({ owner: id });
 
             user = user.toObject();

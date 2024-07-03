@@ -1,6 +1,7 @@
 const RecipeModel = require("../models/recipe.model")
 const RatingModel = require("../models/rating.model")
 const CommentModel = require("../models/comment.model")
+const HelperService = require("../services/helper.service")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
@@ -14,21 +15,6 @@ var saveRecipe = async function(recipe)
     catch (err) { throw err }
 }
 
-async function calculateAverageRating(recipeId) {
-    try {
-        const ratings = await RatingModel.find({ recipe: recipeId });
-        if (ratings.length === 0) {
-            return 0;
-        } else {
-            const totalRating = ratings.reduce((sum, rating) => sum + rating.rating, 0);
-            const averageRating = totalRating / ratings.length;
-            return averageRating;
-        }
-    } catch (err) {
-        throw err;
-    }
-}
-
 var findRecipeById = async function(id, commentPage = 1) {
     try {
         if (ObjectId.isValid(id)) {
@@ -38,7 +24,7 @@ var findRecipeById = async function(id, commentPage = 1) {
 
             if (!recipe) return undefined;
 
-            var averageRating = await calculateAverageRating(id)
+            var averageRating = await HelperService.recipeAverage(id)
 
             var commentsQuery = CommentModel.find({ recipe: id })
                 .sort({ createdAt: -1 })
@@ -195,6 +181,19 @@ var deleteRating = async function(id) {
     catch (err){ throw err }
 }
 
+var checkRated = async function(userId, recipeId){
+    try {
+        if (ObjectId.isValid(userId) && ObjectId.isValid(recipeId)) {
+          const count = await RatingModel.countDocuments({ user: userId, recipe: recipeId });
+          return count > 0;
+        }
+        return false;
+      } catch (error) {
+        console.error('Error checking rated recipe:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     saveRecipe,
     findRecipeById,
@@ -202,5 +201,6 @@ module.exports = {
     deleteRecipe,
     updateRecipe,
     rateRecipe,
-    deleteRating
+    deleteRating,
+    checkRated
 }

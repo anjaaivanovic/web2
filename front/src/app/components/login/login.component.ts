@@ -25,7 +25,6 @@ export class LoginComponent {
         this.router.navigate(['home']);
       },
       error: (err) => {
-        console.log("odje")
         this.errorMsg = "Wrong credentials!"
         console.log(err)
       }

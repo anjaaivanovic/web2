@@ -80,4 +80,12 @@ export class RecipeService {
     });
     return this.httpClient.post(`${this.url}/rate`, rating, {headers})
   }
+
+  checkRated(recipe: string): Observable<any>{
+    var params = new HttpParams().set('recipeId', recipe)
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    return this.httpClient.get<any>(`${this.url}/rated/try`, {headers, params});
+  }
 }

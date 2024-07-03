@@ -75,7 +75,6 @@ export class ProfileComponent {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      console.log(params["id"]);
       this.user._id = params["id"];
     });
 
@@ -84,7 +83,6 @@ export class ProfileComponent {
       var id = this.authService.getDecodedAccessToken(this.token)
       if (id._id == this.user._id){
         this.displaySaved = true;
-        console.log("ulg")
       } 
     } 
     this.loadPostedRecipes();
@@ -99,8 +97,6 @@ export class ProfileComponent {
         next: (resp) => {
           this.savedRecipes = resp.recipes.data
           this.savedPagination = resp.recipes.pagination
-          console.log(this.savedRecipes)
-          console.log(this.savedPagination)
         }
       }
     )
@@ -122,8 +118,6 @@ export class ProfileComponent {
         next: (resp) => {
           this.postedRecipes = resp.recipes.data
           this.postedPagination = resp.recipes.pagination
-          console.log(this.postedRecipes)
-          console.log(this.postedPagination)
         },
         error: (error) => {
           console.log(error)
@@ -137,7 +131,6 @@ export class ProfileComponent {
       {
         next: (resp) => {
           this.user = resp
-          console.log(this.user)
         },
         error: (error) => {
           console.log(error)
