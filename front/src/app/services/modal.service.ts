@@ -1,18 +1,30 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModalService {
-  private modalVisibilitySubject = new BehaviorSubject<boolean>(false);
-  modalVisibility = this.modalVisibilitySubject.asObservable();
+  private modalVisibilityMap: Map<string, BehaviorSubject<boolean>> = new Map();
 
-  showModal() {
-    this.modalVisibilitySubject.next(true);
+  getModalVisibility(modalId: string): Observable<boolean> {
+    if (!this.modalVisibilityMap.has(modalId)) {
+      this.modalVisibilityMap.set(modalId, new BehaviorSubject<boolean>(false));
+    }
+    return this.modalVisibilityMap.get(modalId)!.asObservable();
   }
 
-  hideModal() {
-    this.modalVisibilitySubject.next(false);
+  showModal(modalId: string) {
+    if (!this.modalVisibilityMap.has(modalId)) {
+      this.modalVisibilityMap.set(modalId, new BehaviorSubject<boolean>(true));
+    } else {
+      this.modalVisibilityMap.get(modalId)!.next(true);
+    }
+  }
+
+  hideModal(modalId: string) {
+    if (this.modalVisibilityMap.has(modalId)) {
+      this.modalVisibilityMap.get(modalId)!.next(false);
+    }
   }
 }

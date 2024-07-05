@@ -72,7 +72,8 @@ export class ProfileComponent {
 
   displaySaved = false
   url = Environment.imagesUrl
-
+  recipeModalId = "addRecipeModal";
+  
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.user._id = params["id"];
@@ -140,8 +141,8 @@ export class ProfileComponent {
     )
   }
 
-  openModal() {
-    this.modalService.showModal();
+  openModal(id: string) {
+    this.modalService.showModal(id);
   }
 
   totalPagesArray(pagination: Pagination): number[] {

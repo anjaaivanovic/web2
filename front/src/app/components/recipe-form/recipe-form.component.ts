@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../services/category.service';
@@ -14,16 +14,16 @@ import { Router } from '@angular/router';
   styleUrl: './recipe-form.component.css'
 })
 export class RecipeFormComponent {
-  @Input() recipe: any;
   isVisible = false;
 
   recipeForm!: FormGroup
 
   categories: Category[] = [];
   id = ""
-
+  modalId = "addRecipeModal"
+  
   constructor(private router: Router, private modalService: ModalService, private categoryService: CategoryService, private recipeService: RecipeService, private authService: AuthService) {
-    this.modalService.modalVisibility.subscribe((isVisible: boolean) => {
+    this.modalService.getModalVisibility(this.modalId).subscribe((isVisible: boolean) => {
       this.isVisible = isVisible;
     });
   }
@@ -130,6 +130,6 @@ export class RecipeFormComponent {
   }
 
   closeModal() {
-    this.modalService.hideModal();
+    this.modalService.hideModal(this.modalId);
   }
 }

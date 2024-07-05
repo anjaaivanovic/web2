@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent } from './components/card/card.component';
 import { CategoryCardComponent } from './components/category-card/category-card.component';
 import { RecipeFormComponent } from './components/recipe-form/recipe-form.component';
+import { RecipeEditFormComponent } from './components/recipe-edit-form/recipe-edit-form.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RecipeFormComponent } from './components/recipe-form/recipe-form.compon
     RegisterComponent,
     CardComponent,
     CategoryCardComponent,
-    RecipeFormComponent
+    RecipeFormComponent,
+    RecipeEditFormComponent
   ],
   imports: [
     BrowserModule,

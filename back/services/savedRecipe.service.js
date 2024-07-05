@@ -124,7 +124,6 @@ var checkSaved = async function (userId, recipeId){
     try {
         if (ObjectId.isValid(userId) && ObjectId.isValid(recipeId)) {
           const count = await SavedRecipeModel.countDocuments({ userId: userId, recipeId: recipeId });
-          console.log(count)
           return count > 0;
         }
         return false;

@@ -12,7 +12,7 @@
                 <span class="info">{{recipe.servingSize}} servings</span>
             </div>
             <div class="col info">
-                Recipe rating<i class="fa fa-trash" *ngIf="owned" (click)="deleteRecipe(recipe._id);"></i><i *ngIf="token && !owned && saved" (click)="unsaveRecipe(recipe._id);" class="fa fa-bookmark"></i><i *ngIf="token && !owned && !saved" (click)="saveRecipe(recipe._id);" class="fa fa-bookmark-o"></i><br>
+                Recipe rating<i class="fa fa-pencil" *ngIf="owned" (click)="openModal(editModalId)"></i><i class="fa fa-trash" *ngIf="owned" (click)="deleteRecipe(recipe._id);"></i><i *ngIf="token && !owned && saved" (click)="unsaveRecipe(recipe._id);" class="fa fa-bookmark"></i><i *ngIf="token && !owned && !saved" (click)="saveRecipe(recipe._id);" class="fa fa-bookmark-o"></i><br>
                 <div class="stats">{{recipe.averageRating}}<i class="fa fa-star"></i></div><br>
                 <button class="rate-recipe" *ngIf="token && !owned && !rated"  data-bs-toggle="modal" data-bs-target="#myModal">Rate this recipe</button>
             </div>
@@ -69,7 +69,7 @@
             </span>
         </div>
     </div>
-    <app-recipe-form [recipe]="recipe"></app-recipe-form>
+    <app-recipe-edit-form [recipe]="recipe"></app-recipe-edit-form>
     <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">

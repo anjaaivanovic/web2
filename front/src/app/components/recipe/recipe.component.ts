@@ -47,15 +47,17 @@ export class RecipeComponent {
   saved = false;
   rated = false;
   rating = 0;
+  editModalId = "editRecipeModal";
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.recipe._id = params["id"];
-    });
     this.loadRecipe();
+    console.log(this.recipe)
   }
 
   loadRecipe(){
+    this.route.params.subscribe((params) => {
+      this.recipe._id = params["id"];
+    });
     this.recipeService.getRecipe(this.recipe._id, this.pagination.currentPage).subscribe(
       {
         next: (resp) => {
@@ -116,8 +118,9 @@ export class RecipeComponent {
     }
   });
   }
-  openModal() {
-    this.modalService.showModal();
+  
+  openModal(id: string) {
+    this.modalService.showModal(id);
   }
 
   editRecipe(){

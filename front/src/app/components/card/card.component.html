@@ -4,7 +4,7 @@
     <div class="recipe-details">
       <div class="recipe-header">
         <span class="recipe-title" [routerLink]="['/recipe', recipe._id]" style="cursor:pointer">{{ recipe.title }}</span>
-        <span class="recipe-rating">{{ recipe.averageRating }} <i class="fa fa-star"></i></span>
+        <span class="recipe-rating">{{ recipe.averageRating > 0 ? recipe.averageRating: "Not rated" }} <i class="fa fa-star"></i></span>
       </div>
       <p class="recipe-author"><span [routerLink]="['/profile', recipe.owner._id]" style="cursor:pointer">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</span></p>
       <p class="recipe-description">{{ recipe.description }}</p>
