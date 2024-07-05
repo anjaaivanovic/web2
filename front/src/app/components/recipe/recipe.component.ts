@@ -41,7 +41,7 @@ export class RecipeComponent {
 
   text = ""
 
-  token: string = ""
+  token: string | null = ""
   url = Environment.imagesUrl;
   owned = false;
   saved = false;
@@ -64,9 +64,9 @@ export class RecipeComponent {
           this.recipe = resp.recipe
           this.recipe.averageRating = resp.averageRating
           this.pagination = resp.commentPagination
-          var token = localStorage.getItem("token")
-          if (token) {
-            if (this.authService.getDecodedAccessToken(token)._id == this.recipe.owner?._id) {
+          this.token = localStorage.getItem("token")
+          if (this.token) {
+            if (this.authService.getDecodedAccessToken(this.token)._id == this.recipe.owner?._id) {
               this.owned = true;
             }
           }
@@ -81,8 +81,7 @@ export class RecipeComponent {
     this.recipeService.deleteRecipe(id).subscribe({
       next: (resp) => {
         if (resp) {
-          var token = localStorage.getItem("token")
-          if (token) this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(token)._id}`])
+          if (this.token) this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(this.token)._id}`])
         } 
       },
       error: (err) => {
@@ -92,8 +91,7 @@ export class RecipeComponent {
   }
 
   saveRecipe(id: string){
-    var token = <string>localStorage.getItem("token")
-    var user = this.authService.getDecodedAccessToken(token)._id
+    var user = this.authService.getDecodedAccessToken(<string>this.token)._id
     this.savedRecipeService.saveRecipe(id, user).subscribe({
       next: (resp) => {
         if (resp.success) window.location.reload()
@@ -106,8 +104,7 @@ export class RecipeComponent {
   }
 
   unsaveRecipe(id: string){
-    var token = <string>localStorage.getItem("token")
-    var user = this.authService.getDecodedAccessToken(token)._id
+    var user = this.authService.getDecodedAccessToken(<string>this.token)._id
     this.savedRecipeService.unsaveRecipe(id, user).subscribe({
       next: (resp) => {
         if (resp.success) window.location.reload()
@@ -130,7 +127,7 @@ export class RecipeComponent {
     var comm: PostComment = {
       recipe: this.recipe._id,
       text: this.text,
-      user: this.authService.getDecodedAccessToken(<string>localStorage.getItem("token"))._id
+      user: this.authService.getDecodedAccessToken(<string>this.token)._id
     }
     this.commentService.postComment(comm).subscribe({
       next: (resp) => {
@@ -163,11 +160,17 @@ export class RecipeComponent {
     })
   }
 
+  stars: boolean[] = Array(5).fill(false);
+
+  updateStars(rating: number) {
+    this.rating = rating;
+  }
+
   rate(){
     var r: PostRating = {
       rating: this.rating,
       recipe: this.recipe._id,
-      user: this.authService.getDecodedAccessToken(<string>localStorage.getItem("token"))._id
+      user: this.authService.getDecodedAccessToken(<string>this.token)._id
     }
     this.recipeService.rateRecipe(r).subscribe({
       next: (resp) => {

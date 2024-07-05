@@ -37,10 +37,6 @@
     font-weight: 300;
 }
 
-.fa-star{
-    font-size: 56px;
-}
-
 .recipe-header img{
     width: 30vh;
     height: 30vh;
@@ -103,30 +99,20 @@ h1{
     object-fit: cover;
 }
 
-.fa-trash{
+.fa{
     margin-left: 30px;
     font-size:36px;
     cursor: pointer;
 }
 
-.fa-bookmark{
-    margin-left: 30px;
-    font-size:36px;
-    cursor: pointer;
+.fa-star{
+    font-size: 56px;
 }
 
-.fa-bookmark-o{
-    margin-left: 30px;
-    font-size:36px;
+.modal-body .fa{
+    font-size: 30px;
     cursor: pointer;
 }
-
-.fa-pencil{
-    margin-left: 30px;
-    font-size:36px;
-    cursor: pointer;
-}
-
 
 .pagination-numbers {
     display: flex;
@@ -165,4 +151,8 @@ color: black;
     right: 10px;
     cursor: pointer;
     color:#3D4113;
+}
+
+.btn-primary {
+    background-color: #3D4113;
 }
