@@ -2,6 +2,7 @@ const RecipeModel = require("../models/recipe.model")
 const RatingModel = require("../models/rating.model")
 const CommentModel = require("../models/comment.model")
 const HelperService = require("../services/helper.service")
+const UserService = require("../services/user.service")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
@@ -55,13 +56,16 @@ var findRecipeById = async function(id, commentPage = 1) {
 
 var findRecipes = async function(userId, page = 1, categories = [], search = '', prepTime, cookTime, servingSize, sort = 'title', order = 'asc', home = null) {
     try {
+        var authors = []
         var query = {};
         if (userId && ObjectId.isValid(userId)) query.owner = userId;
         if (categories.length > 0) query.categories = { $in: categories };
         if (search) {
+            authors = await UserService.findUserIdsByName(search);
             const regex = new RegExp('\\b' + search, 'i'); 
             query.$or = [
-                { title: { $regex: regex } }
+                { title: { $regex: regex } },
+                { owner: { $in: authors } }
             ];
         }
         if (prepTime) query.prepTime = { $lte: prepTime };

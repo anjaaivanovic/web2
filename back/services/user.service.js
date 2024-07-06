@@ -55,9 +55,38 @@ var updateUser = async function(id, updatedUser) {
     }
 };
 
+var findUserIdsByName = async function(search) {
+    try{
+        var query = {}
+        if (search) {
+            var splitSearch = search.split(" ");
+            if (splitSearch.length != 2)
+            {
+                const regex = new RegExp('\\b' + search, 'i'); 
+                query.$or = [
+                    { firstName: { $regex: regex } },
+                    { lastName: { $regex: regex } }
+                ];
+            }
+            else{
+                const regexFn = new RegExp('\\b' + search[0].trim(), 'i');
+                const regexLn = new RegExp('\\b' + search[0].trim(), 'i'); 
+                query.$or = [
+                    { firstName: { $regex: regexFn } },
+                    { lastName: { $regex: regexLn } }
+                ];
+            }
+            
+        }
+        return (await UserModel.find(query)).map(x => x.id)
+    }
+    catch (err) { throw err; }
+}
+
 module.exports = {
     register,
     getProfile,
     deleteUser,
-    updateUser
+    updateUser,
+    findUserIdsByName
 }
