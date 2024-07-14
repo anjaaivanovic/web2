@@ -1,6 +1,7 @@
 const SavedRecipeModel = require("../models/savedRecipe.model")
 const RecipeModel = require("../models/recipe.model")
 const RatingModel = require("../models/rating.model")
+const HelperService = require("../services/helper.service")
 var ObjectId = require('mongoose').Types.ObjectId;
 
 const recipesPerPage = 3
@@ -10,7 +11,6 @@ async function findSavedRecipes(userId, page = 1, categories = [], search = '', 
         if (ObjectId.isValid(userId)) {
             var savedRecipes = await SavedRecipeModel.find({ userId: userId });
             var recipeIds = savedRecipes.map(item => item.recipeId);
-
             var query = { _id: { $in: recipeIds } };
 
             if (categories.length > 0) query.categories = { $in: categories };
@@ -40,7 +40,7 @@ async function findSavedRecipes(userId, page = 1, categories = [], search = '', 
                 .populate('categories');
             
             if (sortByRating) {
-                var averageRatings = await calculateAverageRatings(userId, categories, search, prepTime, cookTime, servingSize, sort, order);
+                var averageRatings = await HelperService.averageRatings(recipeIds);
 
                 var ratingMap = averageRatings.reduce((map, avgRating) => {
                     map[avgRating._id.toString()] = avgRating.averageRating;

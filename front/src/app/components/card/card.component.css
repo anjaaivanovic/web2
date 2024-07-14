@@ -92,3 +92,9 @@
 .view-recipe-button:hover {
   background-color: #3c3a25;
 }
+
+.recipe-time img{
+  padding: 5px;
+  width: 35px;
+  height: 35px;
+}

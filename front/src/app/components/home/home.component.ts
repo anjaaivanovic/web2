@@ -64,6 +64,12 @@ export class HomeComponent {
     )
   }
 
+  clearFilters(){
+    this.prepTime = undefined;
+    this.cookTime = undefined;
+    this.servingSize = undefined;
+  }
+
   loadCategories() {
     this.categoryService.getCategories().subscribe(
       {
@@ -92,6 +98,11 @@ export class HomeComponent {
   gotoPage(page: number): void {
     this.pagination.currentPage = page;
     this.loadRecipes();
+  }
+
+  setSorting(field: string, order: string){
+    this.sort = field;
+    this.order = order;
   }
   
 }

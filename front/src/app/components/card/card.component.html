@@ -9,7 +9,7 @@
       <p class="recipe-author"><span [routerLink]="['/profile', recipe.owner._id]" style="cursor:pointer">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</span></p>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div class="recipe-footer">
-        <span class="recipe-time"><i class="fa fa-clock-o"></i> {{ recipe.prepTime + recipe.cookTime }}min</span>
+        <span class="recipe-time"><img [src]="url + '/prep.png'">{{ recipe.prepTime }}min<img [src]="url + '/cook.png'">{{recipe.cookTime}}min</span>
         <a [routerLink]="['/recipe', recipe._id]" class="view-recipe-button">View recipe >></a>
       </div>
     </div>

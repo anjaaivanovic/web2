@@ -3,7 +3,11 @@
     <div class="recipe-header">
         <div class="info-header row" style="text-align: center;">
             <div class="col info">Total time<br>
-                <div class="stats">{{recipe.prepTime + recipe.cookTime}}<span>mins</span></div>
+                <div class="stats">{{recipe.prepTime + recipe.cookTime}}<span>mins</span></div><br>
+                    <span class="recipe-time row">
+                        <span class="col text-end"><img [src]="url + '/prep.png'">Prep: {{ recipe.prepTime }}min</span>
+                        <span class="col text-start"><img [src]="url + '/cook.png'"> Cook: {{recipe.cookTime}}min</span>
+                    </span>
             </div>
             <div class="col recipe">
                 <h1>{{recipe.title}}</h1><br>
@@ -12,7 +16,7 @@
                 <span class="info">{{recipe.servingSize}} servings</span>
             </div>
             <div class="col info">
-                Recipe rating<i class="fa fa-pencil" *ngIf="owned" (click)="openModal(editModalId)"></i><i class="fa fa-trash" *ngIf="owned" (click)="deleteRecipe(recipe._id);"></i><i *ngIf="token && !owned && saved" (click)="unsaveRecipe(recipe._id);" class="fa fa-bookmark"></i><i *ngIf="token && !owned && !saved" (click)="saveRecipe(recipe._id);" class="fa fa-bookmark-o"></i><br>
+                Recipe rating<i class="fa fa-pencil" *ngIf="owned" (click)="openModal(editModalId)"></i><i class="fa fa-trash" *ngIf="owned"  data-bs-toggle="modal" data-bs-target="#deleteModal"></i><i *ngIf="token && !owned && saved" (click)="unsaveRecipe(recipe._id);" class="fa fa-bookmark"></i><i *ngIf="token && !owned && !saved" (click)="saveRecipe(recipe._id);" class="fa fa-bookmark-o"></i><br>
                 <div class="stats">{{recipe.averageRating}}<i class="fa fa-star"></i></div><br>
                 <button class="rate-recipe" *ngIf="token && !owned && !rated"  data-bs-toggle="modal" data-bs-target="#myModal">Rate this recipe</button>
             </div>
@@ -22,6 +26,7 @@
         <h1>Description</h1>
         <p>{{recipe.description}}</p>
     </div>
+    
     <div class="sec ingredients">
         <h1>Ingredients</h1>
         <div class="ingredients-list">
@@ -52,6 +57,7 @@
     <div class="sec comments">
         <h1>Comments ({{pagination.totalItems}})</h1>
         <div class="comment-section">
+            <div *ngIf="recipe.comments.length == 0" style="padding-bottom: 5vh; font-size: 20px;">No comments posted for this recipe. <span *ngIf="token"> Be the first to comment!</span></div>
             <div class="comment row" *ngFor="let comment of recipe.comments">
                 <div class="col-1">
                     <img [src]="url.concat('/', comment.user.image)" [alt]="url.concat(comment.user.image)">
@@ -101,7 +107,22 @@
           </div>
         </div>
       </div>
-</div>
-<script>
 
-</script>
+      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete recipe?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this recipe?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button class="btn btn-primary" (click)="deleteRecipe(recipe._id)">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

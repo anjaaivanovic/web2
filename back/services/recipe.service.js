@@ -75,45 +75,45 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
 
         var sortCriteria = {};
         var sortByRating = false;
-        if (sort == "rating"){  
+        if (sort === "rating") {  
             sortCriteria = { averageRating: order === 'asc' ? 1 : -1 };
             sortByRating = true;
+        } else {
+            sortCriteria[sort] = order === 'asc' ? 1 : -1;
         }
-        else sortCriteria[sort] = order === 'asc' ? 1 : -1;
 
         var totalItems = await RecipeModel.countDocuments(query);
         var recipesQuery = RecipeModel.find(query)
             .populate('owner')
             .populate('comments')
-            .populate('categories');
+            .populate('categories')
+            .lean();
+        
+        var recipes = await recipesQuery;
         
         if (sortByRating) {
-            var averageRatings = await calculateAverageRatings(userId, categories, search, prepTime, cookTime, servingSize, sort, order);
-
+            var averageRatings = await HelperService.averageRatings();
             var ratingMap = averageRatings.reduce((map, avgRating) => {
                 map[avgRating._id.toString()] = avgRating.averageRating;
                 return map;
             }, {});
 
-            recipesQuery = recipesQuery.sort((recipeA, recipeB) => {
+            recipes = recipes.sort((recipeA, recipeB) => {
                 var ratingA = ratingMap[recipeA._id.toString()] || 0;
                 var ratingB = ratingMap[recipeB._id.toString()] || 0;
                 return (order === 'asc' ? ratingA - ratingB : ratingB - ratingA);
             });
         } else {
-            recipesQuery = recipesQuery.sort(sortCriteria);
+            recipes = recipes.sort((a, b) => {
+                if (a[sort] < b[sort]) return order === 'asc' ? -1 : 1;
+                if (a[sort] > b[sort]) return order === 'asc' ? 1 : -1;
+                return 0;
+            });
         }
 
-        var recipes = await recipesQuery
-        .skip((page - 1) * recipesPerPage)
-        .limit(recipesPerPage);
-
-        var recipeIds = recipes.map(recipe => recipe._id);
+        var paginatedRecipes = recipes.slice((page - 1) * recipesPerPage, page * recipesPerPage);
 
         var ratings = await RatingModel.aggregate([
-            {
-                $match: { recipe: { $in: recipeIds } }
-            },
             {
                 $group: {
                     _id: '$recipe',
@@ -122,10 +122,10 @@ var findRecipes = async function(userId, page = 1, categories = [], search = '',
             }
         ]);
 
-        var recipesWithRatings = recipes.map(recipe => {
+        var recipesWithRatings = paginatedRecipes.map(recipe => {
             var rating = ratings.find(r => r._id.toString() === recipe._id.toString());
             return {
-                ...recipe.toObject(),
+                ...recipe,
                 averageRating: rating ? rating.averageRating : 0
             };
         });

@@ -90,3 +90,21 @@
   margin-left: 30px;
   cursor: pointer;
 }
+
+.btn-outline-dark{
+  margin: 5px;
+  color: #3D4113;
+}
+
+.btn-outline-dark:hover{
+  background-color: #878b51;
+}
+
+.btn-outline-dark:focus{
+  color: #3D4113;
+  background-color: #878b51;
+}
+
+.modal-footer .btn-primary{
+  background-color: #3D4113;
+}

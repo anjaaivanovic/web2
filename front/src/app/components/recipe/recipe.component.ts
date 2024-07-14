@@ -61,17 +61,28 @@ export class RecipeComponent {
     this.recipeService.getRecipe(this.recipe._id, this.pagination.currentPage).subscribe(
       {
         next: (resp) => {
-          this.recipe = resp.recipe
-          this.recipe.averageRating = resp.averageRating
-          this.pagination = resp.commentPagination
-          this.token = localStorage.getItem("token")
-          if (this.token) {
-            if (this.authService.getDecodedAccessToken(this.token)._id == this.recipe.owner?._id) {
-              this.owned = true;
+          if (resp)
+          {
+            this.recipe = resp.recipe
+            this.recipe.averageRating = resp.averageRating
+            this.pagination = resp.commentPagination
+            this.token = localStorage.getItem("token")
+            if (this.token) {
+              if (this.authService.getDecodedAccessToken(this.token)._id == this.recipe.owner?._id) {
+                this.owned = true;
+              }
             }
+            this.checkSaved();
+            this.checkRated();
           }
-          this.checkSaved();
-          this.checkRated();
+          else{
+            this.token = localStorage.getItem("token")
+            if (this.token) this.router.navigate([`profile/${this.authService.getDecodedAccessToken(this.token)._id}`]);
+            else this.router.navigate(["home"])
+          } 
+        },
+        error: (err) => {
+          if (this.token) this.router.navigate([`profile/${this.authService.getDecodedAccessToken(this.token)._id}`]);
         }
       }
     )
@@ -81,7 +92,7 @@ export class RecipeComponent {
     this.recipeService.deleteRecipe(id).subscribe({
       next: (resp) => {
         if (resp) {
-          if (this.token) this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(this.token)._id}`])
+          window.location.reload();
         } 
       },
       error: (err) => {
@@ -108,7 +119,7 @@ export class RecipeComponent {
     this.savedRecipeService.unsaveRecipe(id, user).subscribe({
       next: (resp) => {
         if (resp.success) window.location.reload()
-        else console.log("nije")
+        else console.log("nije uns")
     },
     error: (err) => {
       console.log(err)
@@ -118,9 +129,6 @@ export class RecipeComponent {
   
   openModal(id: string) {
     this.modalService.showModal(id);
-  }
-
-  editRecipe(){
   }
 
   comment(){
@@ -139,7 +147,6 @@ export class RecipeComponent {
     })
   }
 
-  
   totalPagesArray(pagination: Pagination): number[] {
     return Array(pagination.totalPages).fill(0).map((x, i) => i + 1);
   }

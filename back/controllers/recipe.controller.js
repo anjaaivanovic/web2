@@ -214,7 +214,7 @@ router.put("/", passport.authenticate('jwt', { session: false }), upload.single(
         req.body.steps = JSON.parse(req.body.steps);
 
         var result = await Recipe.updateRecipe(req.body._id, req.body);
-        console.log(result)
+
         if (result) res.send({ recipe: result });
         else res.status(501).send();
     } catch (err) {

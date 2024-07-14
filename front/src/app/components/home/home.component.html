@@ -18,8 +18,8 @@
             <span>Recipes</span>
         </div>
         <div class="options col-2">
-            <i class="fa fa-filter"></i>
-            <i class="fa fa-sort"></i>
+            <i class="fa fa-filter" data-bs-toggle="modal" data-bs-target="#filterModal"></i>
+            <i class="fa fa-sort" data-bs-toggle="modal" data-bs-target="#sortModal"></i>
         </div>
     </div>
     <div class="recipe-list">
@@ -32,4 +32,55 @@
             </span>
           </span>
     </span>
+
+    <!-- sort modal -->
+    <div class="modal fade" id="sortModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Sorting options</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('title', 'asc')">Title ascending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('title', 'desc')">Title descending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('rating', 'asc')">Rating ascending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('rating', 'desc')">Rating descending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('prepTime', 'asc')">Prep time ascending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('prepTime', 'desc')">Prep time descending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('cookTime', 'asc')">Cook time ascending</button><br>
+                <button type="button" class="btn btn-outline-dark" (click)="setSorting('cookTime', 'desc')">Cook time descending</button>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button class="btn btn-primary" (click)="loadRecipes()" data-bs-dismiss="modal">Sort</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <!-- filter modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Filtering options</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="prepTime" class="form-label">Longest Prep Time</label>: {{prepTime}}
+                <input type="range" class="form-range" min="0" max="120" step="5" id="prepTime" [(ngModel)]="prepTime"> 
+                <label for="cookTime" class="form-label">Longest Cook Time</label>: {{cookTime}}
+                <input type="range" class="form-range" min="0" max="120" step="5" id="cookTime" [(ngModel)]="cookTime"> 
+                <label for="servingSize" class="form-label">Minimum Serving Size</label>: {{servingSize}}
+                <input type="range" class="form-range" min="0" max="10" step="1" id="servingSize" [(ngModel)]="servingSize">
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary clear" (click)="clearFilters(); loadRecipes()" data-bs-dismiss="modal" style="background-color: #6d703a;">Clear Filters</button>
+            <button class="btn btn-primary" (click)="loadRecipes()" data-bs-dismiss="modal">Filter</button>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>

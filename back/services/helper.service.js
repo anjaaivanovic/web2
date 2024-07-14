@@ -47,7 +47,28 @@ totalAverage = async function calculateAverageRatingForUserRecipes(userId) {
     }
 }
 
+var averageRatings = async function() {
+    var avgs = await RatingModel.aggregate([
+        {
+            $group: {
+                _id: '$recipe',
+                averageRating: { $avg: '$rating' }
+            }
+        },
+        {
+            $project: {
+                _id: '$_id', // Include a new field called id with the value of _id
+                averageRating: 1 // Keep the averageRating field
+            }
+        }
+    ]);
+
+    return avgs;
+}
+
+
 module.exports = {
     recipeAverage,
-    totalAverage
+    totalAverage,
+    averageRatings
 }
