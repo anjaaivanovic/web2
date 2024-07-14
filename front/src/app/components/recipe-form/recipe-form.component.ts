@@ -22,6 +22,8 @@ export class RecipeFormComponent {
   id = ""
   modalId = "addRecipeModal"
   
+  photoURL: string | ArrayBuffer | null = null;
+
   constructor(private router: Router, private modalService: ModalService, private categoryService: CategoryService, private recipeService: RecipeService, private authService: AuthService) {
     this.modalService.getModalVisibility(this.modalId).subscribe((isVisible: boolean) => {
       this.isVisible = isVisible;
@@ -36,15 +38,13 @@ export class RecipeFormComponent {
       prepTime: new FormControl(null, Validators.required),
       cookTime: new FormControl(null, Validators.required),
       servingSize: new FormControl(null, Validators.required),
-      ingredients: new FormArray([]),
-      instructions: new FormArray([]),
+      ingredients: new FormArray([], Validators.required),
+      instructions: new FormArray([], Validators.required),
       category: new FormControl(null, Validators.required),
     });
     var token = localStorage.getItem("token");
     if (token) this.id = this.authService.getDecodedAccessToken(token)._id;
 
-    this.addIngredient();
-    this.addStep();
     this.addIngredient();
     this.addStep();
 
@@ -89,11 +89,16 @@ export class RecipeFormComponent {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
-    console.log(file)
     if (file) {
       this.recipeForm.patchValue({
         image: file
       });
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.photoURL = reader.result;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -101,30 +106,28 @@ export class RecipeFormComponent {
     if (this.recipeForm.valid) {
       const formValue = this.recipeForm.value;
       
-      const newRecipe: PostRecipe = {
-        categories: formValue.category,
-        averageRating: formValue.averageRating,
-        cookTime: formValue.cookTime,
-        prepTime: formValue.prepTime,
-        description: formValue.description,
-        ingredients: formValue.ingredients,
-        owner: this.id,
-        servingSize: formValue.servingSize,
-        steps: formValue.instructions,
-        title: formValue.title,
-        image: formValue.image
+      const formData = new FormData();
+      formData.append('categories', formValue.category);
+      formData.append('cookTime', formValue.cookTime);
+      formData.append('prepTime', formValue.prepTime);
+      formData.append('description', formValue.description);
+      formData.append('ingredients', JSON.stringify(formValue.ingredients));
+      formData.append('owner', this.id);
+      formData.append('servingSize', formValue.servingSize);
+      formData.append('steps', JSON.stringify(formValue.instructions));
+      formData.append('title', formValue.title);
+
+      if (formValue.image) {
+        formData.append('image', formValue.image);
       }
-      console.log(newRecipe.image)
-      this.recipeService.newRecipe(newRecipe).subscribe(response => {
-        var token = (<string>localStorage.getItem("token"))
-        if (this.router.url === '/home') {
-          this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(token)._id}`]).then(() => {
+
+      this.recipeService.newRecipe(formData).subscribe( {
+        next: (resp) => {
+          if (resp){
             window.location.reload();
-          });
-        } else {
-          this.router.navigate([`/profile/${this.authService.getDecodedAccessToken(token)._id}`]);
+            this.closeModal();
+          }
         }
-        this.closeModal();
       });
     }
   }

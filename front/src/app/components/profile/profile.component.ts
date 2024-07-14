@@ -150,7 +150,6 @@ export class ProfileComponent {
   }
 
   gotoPagePosted(page: number): void {
-    console.log(page)
     this.postedPagination.currentPage = page;
     this.loadPostedRecipes();
   }

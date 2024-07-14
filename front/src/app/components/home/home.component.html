@@ -9,11 +9,19 @@
         
         <img src="http://localhost:3000/images/header.png" alt="header">
     </div>
-
+    <h1 class="section-title">Categories</h1>
     <div class="category-list">
         <app-category-card *ngFor="let category of categories" [category]="category" (click)="toggleCategorySelection(category)"></app-category-card>
     </div>
-    
+    <div class="section-title row">
+        <div class="col">
+            <span>Recipes</span>
+        </div>
+        <div class="options col-2">
+            <i class="fa fa-filter"></i>
+            <i class="fa fa-sort"></i>
+        </div>
+    </div>
     <div class="recipe-list">
         <app-card *ngFor="let recipe of recipes" [recipe]="recipe"></app-card>
     </div>

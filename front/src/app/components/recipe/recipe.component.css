@@ -48,6 +48,7 @@
 
 .description{
     margin-top: 15vh;
+    text-align: justify;
 }
 
 h1{
@@ -155,4 +156,26 @@ color: black;
 
 .btn-primary {
     background-color: #3D4113;
+}
+
+.instruction {
+    display: flex;
+    margin-top: 3vh;
+}
+
+.instruction-number {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #3D4113;
+    color: #ffffff;
+    text-align: center;
+ }
+
+.instruction p{
+    margin-left: 2vh;
+}
+
+.fa-send {
+    font-size: 25px;
 }

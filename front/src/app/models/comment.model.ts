@@ -7,5 +7,6 @@ export interface Comment {
     recipe: Recipe,
     text: string,
     parent: Comment|null,
+    createdAt: Date,
     children: Comment[]
 }

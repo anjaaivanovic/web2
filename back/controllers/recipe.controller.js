@@ -46,6 +46,10 @@ async (req, res) => {
     try{
         req.body.image = "defaultRecipe.png"
         if (req.file) req.body.image = req.file.filename
+
+        req.body.ingredients = JSON.parse(req.body.ingredients);
+        req.body.steps = JSON.parse(req.body.steps);
+
         var result = await Recipe.saveRecipe(req.body)
         if (result) res.send({result: result})
         else res.status(501).send()
@@ -201,9 +205,16 @@ async (req, res) => {
     }
 })
 
-router.put("/", passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.put("/", passport.authenticate('jwt', { session: false }), upload.single('image'), async (req, res) => {
     try {
+        if (!req.body.image) req.body.image = "defaultRecipe.png"
+        if (req.file) req.body.image = req.file.filename
+
+        req.body.ingredients = JSON.parse(req.body.ingredients);
+        req.body.steps = JSON.parse(req.body.steps);
+
         var result = await Recipe.updateRecipe(req.body._id, req.body);
+        console.log(result)
         if (result) res.send({ recipe: result });
         else res.status(501).send();
     } catch (err) {

@@ -40,7 +40,7 @@ export class RecipeService {
     return this.httpClient.get<SingleRecipeResponse>(`${this.url}`, {params})
   }
 
-  newRecipe(recipe: PostRecipe){
+  newRecipe(recipe: FormData){
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     });
@@ -55,24 +55,12 @@ export class RecipeService {
     return this.httpClient.delete(`${this.url}`, {params, headers});
   }
 
-  editRecipe(id: string, recipe: PostRecipe){
+  editRecipe(id: string, recipe: FormData){
     const headers = new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     });
-    var edit: EditRecipe = {
-      _id: id,
-      averageRating: 0,
-      categories: recipe.categories,
-      cookTime: recipe.cookTime,
-      description: recipe.description,
-      ingredients: recipe.ingredients,
-      owner: recipe.owner,
-      prepTime: recipe.prepTime,
-      servingSize: recipe.servingSize,
-      steps: recipe.steps,
-      title: recipe.title
-    }
-    return this.httpClient.put(`${this.url}`, edit, {headers})
+
+    return this.httpClient.put(`${this.url}`, recipe, {headers})
   }
 
   rateRecipe(rating: PostRating){

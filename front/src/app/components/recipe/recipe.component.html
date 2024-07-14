@@ -34,9 +34,10 @@
     <div class="sec instructions">
         <h1>Instructions</h1>
         <div class="instructions-list">
-            <ol>
-                <li *ngFor="let step of recipe.steps">{{step}}</li>
-            </ol>
+            <div class="instruction" *ngFor="let step of recipe.steps, let i=index">
+                <div class="instruction-number">{{i+1}}.</div>
+                <p>{{step}}</p>
+            </div>
         </div>
     </div>
 
@@ -56,7 +57,15 @@
                     <img [src]="url.concat('/', comment.user.image)" [alt]="url.concat(comment.user.image)">
                 </div>
                 <div class="col">
-                    <h1>{{comment.user.firstName}} {{comment.user.lastName}}</h1><br>
+                    <div class="comment-title row justify-content-between">
+                        <div class="col">
+                            <h1>{{comment.user.firstName}} {{comment.user.lastName}}</h1>
+                        </div>
+                        <div class="col text-end">
+                            <span>{{comment.createdAt | date: "short"}}</span>
+                        </div>
+                    </div>
+                    <br>
                     <p>{{comment.text}}</p>
                 </div>
             </div>

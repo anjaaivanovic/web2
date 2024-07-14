@@ -7,6 +7,7 @@ import { CategoryService } from '../../services/category.service';
 import { RecipeService } from '../../services/recipe.service';
 import { AuthService } from '../../services/auth.service';
 import { PostRecipe } from '../../models/postRecipe.model';
+import { Environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-recipe-edit-form',
@@ -21,8 +22,10 @@ export class RecipeEditFormComponent implements OnInit {
   id = "";
   modalId = "editRecipeModal";
 
+  photoURL: string | ArrayBuffer | null = null;
+  url = Environment.imagesUrl
+
   constructor(
-    private router: Router,
     private modalService: ModalService,
     private categoryService: CategoryService,
     private recipeService: RecipeService,
@@ -100,6 +103,12 @@ export class RecipeEditFormComponent implements OnInit {
       this.recipeForm.patchValue({
         image: file
       });
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.photoURL = reader.result;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -107,21 +116,23 @@ export class RecipeEditFormComponent implements OnInit {
     if (this.recipeForm.valid) {
       const formValue = this.recipeForm.value;
 
-      const newRecipe: PostRecipe = {
-        categories: formValue.category,
-        averageRating: formValue.averageRating,
-        cookTime: formValue.cookTime,
-        prepTime: formValue.prepTime,
-        description: formValue.description,
-        ingredients: formValue.ingredients,
-        owner: this.id,
-        servingSize: formValue.servingSize,
-        steps: formValue.instructions,
-        title: formValue.title,
-        image: formValue.image
-      };
+      const formData = new FormData();
+      formData.append('categories', formValue.category);
+      formData.append('cookTime', formValue.cookTime);
+      formData.append('prepTime', formValue.prepTime);
+      formData.append('description', formValue.description);
+      formData.append('ingredients', JSON.stringify(formValue.ingredients));
+      formData.append('owner', this.id);
+      formData.append('servingSize', formValue.servingSize);
+      formData.append('steps', JSON.stringify(formValue.ingredients));
+      formData.append('title', formValue.title);
+      formData.append('_id', this.recipe._id);
 
-      this.recipeService.editRecipe(this.recipe._id, newRecipe).subscribe({
+      if (formValue.image) {
+        formData.append('image', formValue.image);
+      }
+      
+      this.recipeService.editRecipe(this.recipe._id, formData).subscribe({
         next: (resp) => {
           if (resp) {
             window.location.reload();
@@ -144,10 +155,13 @@ export class RecipeEditFormComponent implements OnInit {
       cookTime: this.recipe.cookTime,
       servingSize: this.recipe.servingSize,
       category: this.recipe.categories[0]._id,
+      image: this.recipe.image
     });
 
     this.setFormArray('ingredients', this.recipe.ingredients);
     this.setFormArray('instructions', this.recipe.steps);
+
+    if (this.recipe.image) this.photoURL = this.url + "/" + this.recipe.image;
   }
 
   private setFormArray(arrayName: string, items: string[]) {
