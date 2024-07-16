@@ -8,7 +8,7 @@
                 <img [src]="url.concat('/', user.image)"><br>
                 <button *ngIf="displaySaved" class="post-recipe" (click)="openModal(recipeModalId)">+ Add recipe</button>
             </div>
-            <div class="col info">Average rating<br><div class="stats">{{user.averageRating}}<i class="fa fa-star"></i></div></div>
+            <div class="col info">Average rating<i class="fa fa-pencil" *ngIf="displaySaved" style="margin-left: 15px; font-size:28px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#editUserModal"></i><br><div class="stats">{{user.averageRating}}<i class="fa fa-star"></i></div></div>
         </div>
     </div>
     <div class="recipes">
@@ -31,7 +31,7 @@
         <div class="saved-recipe-list">
             <app-card *ngFor="let recipe of savedRecipes" [recipe]="recipe"></app-card>
         </div>
-        <span *ngIf="postedPagination.totalPages > 1">
+        <span *ngIf="savedPagination.totalPages > 1">
             <span class="pagination-numbers">
                 <span *ngFor="let page of totalPagesArray(savedPagination)" class="page-number" [class.active]="page == savedPagination.currentPage" (click)="gotoPageSaved(page)">
                   {{ page }}
@@ -40,4 +40,35 @@
         </span>
     </div>
     <app-recipe-form></app-recipe-form>
+</div>
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="userForm">
+                <div class="row">
+                    <div class="upload-photo col-6">
+                        <input type="file" id="photo" (change)="onFileChange($event)">
+                        <div class="photo-preview" *ngIf="photoURL" [ngStyle]="{'background-image': 'url(' + photoURL + ')'}"></div>
+                        <div class="upload-text" *ngIf="!photoURL">Upload photo</div>
+                    </div> 
+                    <div class="col text-end" style="margin-right: 15px;">
+                        <input type="text" id="firstName" formControlName="firstName" placeholder="First Name"><br>
+                        <input type="text" id="lastName" formControlName="lastName" placeholder="Last Name"><br>
+                        <input type="password" id="password" formControlName="password" placeholder="Password to confirm edit"><br>
+                        <input type="password" id="repeatPassword" formControlName="repeatPassword" placeholder="Repeat password"><br>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" data-bs-dismiss="modal" (click)="editUser()">Submit</button>
+        </div>
+    </div>
+    </div>
 </div>

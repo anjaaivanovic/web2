@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { Environment } from '../../environments/environment';
 import { ModalService } from '../../services/modal.service';
 import { Category } from '../../models/category.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -74,6 +75,9 @@ export class ProfileComponent {
   url = Environment.imagesUrl
   recipeModalId = "addRecipeModal";
   
+  userForm!: FormGroup;
+  photoURL: string | ArrayBuffer | null = null;
+
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.user._id = params["id"];
@@ -86,6 +90,15 @@ export class ProfileComponent {
         this.displaySaved = true;
       } 
     } 
+
+    this.userForm = new FormGroup({
+      firstName: new FormControl(null, Validators.required),
+      lastName: new FormControl(null, Validators.required),
+      image: new FormControl(null),
+      password: new FormControl(null, Validators.required),
+      repeatPassword: new FormControl(null, Validators.required),
+    });
+
     this.loadPostedRecipes();
     this.loadSavedRecipes();
     this.loadProfile();
@@ -133,6 +146,7 @@ export class ProfileComponent {
       {
         next: (resp) => {
           this.user = resp
+          this.formInit();
         },
         error: (error) => {
           console.log(error)
@@ -157,5 +171,62 @@ export class ProfileComponent {
   gotoPageSaved(page: number): void {
     this.savedPagination.currentPage = page;
     this.loadSavedRecipes();
+  }
+
+  formInit(){
+      this.userForm.patchValue({
+      firstName: this.user.firstName,
+      lastName: this.user.lastName,
+      image: this.user.image
+    })
+
+    if (this.user.image) this.photoURL = this.url + "/" + this.user.image;
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.userForm.patchValue({
+        image: file
+      });
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.photoURL = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  editUser(){
+    if (this.userForm.valid) {
+      const formValue = this.userForm.value;
+      const formData = new FormData();
+      formData.append('firstName', formValue.firstName);
+      formData.append('lastName', formValue.lastName);
+      formData.append('_id', this.user._id);
+      
+      if (formValue.image) {
+        formData.append('image', formValue.image);
+      }
+
+      if (formValue.password != formValue.repeatPassword){
+        console.log("razlicite")
+      }
+      else{
+        this.profileService.editProfile(formData).subscribe({
+          next: (resp) => {
+            if (resp) {
+              console.log(resp)
+              window.location.reload();
+            }
+          },
+          error: (err) => {
+            console.log(err)
+          }
+        });
+      }
+    }
+    else console.log("invalid")
   }
 }

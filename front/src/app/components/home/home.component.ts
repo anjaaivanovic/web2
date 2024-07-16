@@ -37,7 +37,7 @@ export class HomeComponent {
 
   loadRecipes() {
     var token = localStorage.getItem("token");
-    var home = null;
+    var home: any;
     if (token) home = this.authService.getDecodedAccessToken(token)._id;
 
     this.recipeService.allRecipes(
@@ -54,8 +54,35 @@ export class HomeComponent {
       ).subscribe(
       {
         next: (resp) => {
-          this.recipes = resp.recipes.data
-          this.pagination = resp.recipes.pagination
+          if (resp.recipes.pagination.totalPages < this.pagination.currentPage) {
+            this.pagination.currentPage = 1;
+  
+            this.recipeService.allRecipes(
+              this.specificUser,
+              this.pagination.currentPage,
+              this.categories.filter(x => x.selected).map(x => x._id),
+              this.search,
+              this.prepTime,
+              this.cookTime,
+              this.servingSize,
+              this.sort,
+              this.order,
+              home
+            ).subscribe(
+              {
+                next: (resp) => {
+                  this.recipes = resp.recipes.data;
+                  this.pagination = resp.recipes.pagination;
+                },
+                error: (error) => {
+                  console.log(error);
+                }
+              }
+            );
+          } else {
+            this.recipes = resp.recipes.data;
+            this.pagination = resp.recipes.pagination;
+          }
         },
         error: (error) => {
           console.log(error)
@@ -103,6 +130,6 @@ export class HomeComponent {
   setSorting(field: string, order: string){
     this.sort = field;
     this.order = order;
-  }
-  
+    this.pagination.currentPage = 1;
+  }  
 }

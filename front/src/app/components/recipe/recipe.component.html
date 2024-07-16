@@ -39,9 +39,11 @@
     <div class="sec instructions">
         <h1>Instructions</h1>
         <div class="instructions-list">
-            <div class="instruction" *ngFor="let step of recipe.steps, let i=index">
-                <div class="instruction-number">{{i+1}}.</div>
-                <p>{{step}}</p>
+            <div class="instruction row" *ngFor="let step of recipe.steps, let i=index">
+                <div class="instruction-number col-1"><span>{{i+1}}.</span></div>
+                <div class="col">
+                    <p>{{step}}</p>
+                </div>
             </div>
         </div>
     </div>

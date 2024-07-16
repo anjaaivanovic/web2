@@ -1,12 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Category } from '../../models/category.model';
-import { Router } from '@angular/router';
 import { ModalService } from '../../services/modal.service';
 import { CategoryService } from '../../services/category.service';
 import { RecipeService } from '../../services/recipe.service';
 import { AuthService } from '../../services/auth.service';
-import { PostRecipe } from '../../models/postRecipe.model';
 import { Environment } from '../../environments/environment';
 
 @Component({
@@ -124,7 +122,7 @@ export class RecipeEditFormComponent implements OnInit {
       formData.append('ingredients', JSON.stringify(formValue.ingredients));
       formData.append('owner', this.id);
       formData.append('servingSize', formValue.servingSize);
-      formData.append('steps', JSON.stringify(formValue.ingredients));
+      formData.append('steps', JSON.stringify(formValue.instructions));
       formData.append('title', formValue.title);
       formData.append('_id', this.recipe._id);
 

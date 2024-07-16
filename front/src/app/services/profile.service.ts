@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { Observable } from 'rxjs';
@@ -14,5 +14,12 @@ export class ProfileService {
 
   getProfile(userId: string): Observable<User>{
     return this.httpClient.get<User>(`${this.url}/${userId}`);
+  }
+
+  editProfile(updatedUser: FormData): Observable<boolean>{
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    });
+    return this.httpClient.put<boolean>(`${this.url}`, updatedUser, {headers: headers});
   }
 }

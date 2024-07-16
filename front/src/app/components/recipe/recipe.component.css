@@ -164,17 +164,17 @@ color: black;
 }
 
 .instruction-number {
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background-color: #3D4113;
     color: #ffffff;
     text-align: center;
  }
 
-.instruction p{
-    margin-left: 2vh;
-}
+ .instruction-number span{
+    margin-left: -5px;
+ }
 
 .fa-send {
     font-size: 25px;
