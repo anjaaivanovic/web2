@@ -41,7 +41,7 @@
     </div>
     <app-recipe-form></app-recipe-form>
 </div>
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div #editUserModal class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -61,13 +61,14 @@
                         <input type="text" id="lastName" formControlName="lastName" placeholder="Last Name"><br>
                         <input type="password" id="password" formControlName="password" placeholder="Password to confirm edit"><br>
                         <input type="password" id="repeatPassword" formControlName="repeatPassword" placeholder="Repeat password"><br>
+                        <span *ngIf="!areEqual()">Passwords do not match</span>
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary" data-bs-dismiss="modal" (click)="editUser()">Submit</button>
+        <button class="btn btn-primary" data-bs-dismiss="modal" (click)="editUser()" [disabled]="!areEqual()">Submit</button>
         </div>
     </div>
     </div>

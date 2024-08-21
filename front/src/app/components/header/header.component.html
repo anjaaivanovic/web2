@@ -6,10 +6,10 @@
     <div class="right-links col text-end">
       <a *ngIf="token == null" routerLink="/login">Sign in</a>
       <div class="row">
-        <div class="name col text-end" *ngIf="firstName" >
-          <span>Hello, {{firstName | titlecase}}!</span>
-          <img class="avatar" *ngIf="image" [src]="image"></div>
-        <div class="col-1 logout" *ngIf="token != null" (click)="logout()"><i class="fa fa-sign-out"></i></div>
+        <div class="col"  *ngIf="firstName">
+          <span class="name">Hello, {{firstName | titlecase}}!</span>
+        </div>
+        <span class="col-1 logout" *ngIf="token != null" (click)="logout()"><i class="fa fa-sign-out"></i></span>
       </div>
     </div>
   </div>

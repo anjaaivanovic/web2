@@ -91,14 +91,13 @@ router.delete("/", async (req, res) => {
 router.put("/", passport.authenticate('jwt', { session: false }), upload.single('image'),
 async (req, res) => {
     try {
-        req.body.image = "default.png"
+        if (!req.body.image) req.body.image = "default.png"
         if (req.file) req.body.image = req.file.filename
-        var result = await User.updateUser(req.user._id, req.body);
+        var result = await User.updateUser(req.user._id, req.body, req.body.password);
         if (result) res.send({ user: result });
         else res.status(501).send();
     } catch (err) {
-        console.log(err);
-        res.status(501).send({ err: err });
+        res.status(400).send({ err: err.message });
     }
 });
 

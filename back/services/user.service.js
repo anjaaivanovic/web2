@@ -47,9 +47,11 @@ var deleteUser = async function(id){
     catch (err){ throw err }
 }
 
-var updateUser = async function(id, updatedUser) {
+var updateUser = async function(id, updatedUser, password) {
     try {
-        return await UserModel.updateUser(id, updatedUser);
+        var user = await UserModel.findOne({ _id: id });
+        if (user.validatePassword(password)) return await UserModel.updateUser(id, updatedUser);
+        else throw new Error("Invalid password!")
     } catch (err) {
         throw err;
     }

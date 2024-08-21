@@ -51,7 +51,6 @@ export class RecipeComponent {
 
   ngOnInit(): void {
     this.loadRecipe();
-    console.log(this.recipe)
   }
 
   loadRecipe(){
@@ -106,7 +105,6 @@ export class RecipeComponent {
     this.savedRecipeService.saveRecipe(id, user).subscribe({
       next: (resp) => {
         if (resp.success) window.location.reload()
-        else console.log("nije")
     },
     error: (err) => {
       console.log(err)
@@ -119,7 +117,6 @@ export class RecipeComponent {
     this.savedRecipeService.unsaveRecipe(id, user).subscribe({
       next: (resp) => {
         if (resp.success) window.location.reload()
-        else console.log("nije uns")
     },
     error: (err) => {
       console.log(err)

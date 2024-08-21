@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ProfileService } from '../../services/profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../models/user.model';
@@ -17,7 +17,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit, AfterViewInit{
 
   constructor (private profileService: ProfileService, private recipeService: RecipeService, private savedRecipeService: SavedRecipeService, private authService: AuthService, private modalService: ModalService, private route: ActivatedRoute) {}
   user: User = {
@@ -77,6 +77,8 @@ export class ProfileComponent {
   
   userForm!: FormGroup;
   photoURL: string | ArrayBuffer | null = null;
+
+  @ViewChild('editUserModal') myModal!: ElementRef;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -205,28 +207,45 @@ export class ProfileComponent {
       formData.append('firstName', formValue.firstName);
       formData.append('lastName', formValue.lastName);
       formData.append('_id', this.user._id);
+      formData.append('password', formValue.password)
       
       if (formValue.image) {
         formData.append('image', formValue.image);
       }
 
-      if (formValue.password != formValue.repeatPassword){
-        console.log("razlicite")
-      }
-      else{
-        this.profileService.editProfile(formData).subscribe({
-          next: (resp) => {
-            if (resp) {
-              console.log(resp)
-              window.location.reload();
-            }
-          },
-          error: (err) => {
-            console.log(err)
+      this.profileService.editProfile(formData).subscribe({
+        next: (resp) => {
+          if (resp) {
+            window.location.reload();
           }
-        });
-      }
+        },
+        error: (err) => {
+          alert(err.error.err)
+        }
+      });
     }
-    else console.log("invalid")
+  }
+
+  areEqual(): boolean
+  {
+    const formValue = this.userForm.value;
+    
+    if (formValue.password && formValue.repeatPassword && formValue.password === formValue.repeatPassword){
+      return true;
+    }
+
+    return false;
+  }
+
+
+  ngAfterViewInit(): void {
+    const modalElement = this.myModal.nativeElement;
+    modalElement.addEventListener('hidden.bs.modal', () => {
+      this.onModalDismiss();
+    });
+  }
+
+  onModalDismiss(): void {
+    this.formInit();
   }
 }
