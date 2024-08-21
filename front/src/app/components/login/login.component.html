@@ -3,9 +3,11 @@
         <div class="row align-items-center justify-content-center">
             <div class="col-4">
                 <h1>Sign in</h1>
-                <input type="email" [(ngModel)]="login.email" placeholder="Email address"><br>
-                <input type="password" [(ngModel)]="login.password" placeholder="Password"><br>
-                <button (click)="tryLogin()">Sign in</button><br><br>
+                <form [formGroup]="loginForm" (ngSubmit)="tryLogin()">
+                    <input type="email" formControlName="email" placeholder="Email address"><br>
+                    <input type="password" formControlName="password" placeholder="Password"><br>
+                    <button type="submit" [disabled]="!loginForm.valid">Sign in</button><br><br>
+                </form>
                 <span>Don't have an account? <a [routerLink]="['/register']">Register now.</a></span><br>
                 <span *ngIf="errorMsg" class="text-danger">{{ errorMsg }}</span>
                 <br>Or<br><a [routerLink]="['/home']">Continue browsing without signing in.</a>

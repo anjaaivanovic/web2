@@ -54,21 +54,23 @@
                     <div class="upload-photo col-6">
                         <input type="file" id="photo" (change)="onFileChange($event)">
                         <div class="photo-preview" *ngIf="photoURL" [ngStyle]="{'background-image': 'url(' + photoURL + ')'}"></div>
-                        <div class="upload-text" *ngIf="!photoURL">Upload photo</div>
+                        <div class="upload-text-div align-items-center justify-content-center d-flex">
+                            <div class="upload-text">Upload photo</div>
+                        </div>
                     </div> 
                     <div class="col text-end" style="margin-right: 15px;">
                         <input type="text" id="firstName" formControlName="firstName" placeholder="First Name"><br>
                         <input type="text" id="lastName" formControlName="lastName" placeholder="Last Name"><br>
                         <input type="password" id="password" formControlName="password" placeholder="Password to confirm edit"><br>
                         <input type="password" id="repeatPassword" formControlName="repeatPassword" placeholder="Repeat password"><br>
-                        <span *ngIf="!areEqual()">Passwords do not match</span>
+                        <span *ngIf="areVisible() && !areEqual()">Passwords do not match</span>
                     </div>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary" data-bs-dismiss="modal" (click)="editUser()" [disabled]="!areEqual()">Submit</button>
+        <button class="btn btn-primary" data-bs-dismiss="modal" (click)="editUser()" [disabled]="areVisible() && !areEqual()">Submit</button>
         </div>
     </div>
     </div>

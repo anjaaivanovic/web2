@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Environment } from '../../environments/environment';
 
@@ -9,7 +9,7 @@ import { Environment } from '../../environments/environment';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {}
   token:string | null = null
   id: string | null = null
   image: string | null = null
@@ -23,7 +23,14 @@ export class HeaderComponent {
       this.id = decodedToken._id
       this.image = this.url + "/" + decodedToken.image
       this.firstName = decodedToken.name
-      console.log(decodedToken)
+    }
+  }
+
+  navigateToProfile(): void {
+    const currentId = this.route.snapshot.paramMap.get('id');
+
+    if (currentId !== this.id) {
+      this.router.navigate(['/profile', this.id]);
     }
   }
 

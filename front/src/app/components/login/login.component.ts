@@ -1,33 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { Login } from '../../models/login.model';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router) {}
-  login: Login = {
-    email: "",
-    password: ""
+  loginForm!: FormGroup;
+  errorMsg: string = "";
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private messageService: MessageService
+  ) {}
+
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
   }
-  errorMsg: string = ""
 
-  tryLogin(){
-    this.authService.login(this.login).subscribe({
-      next: (resp) => {
-        this.errorMsg = "";
-        localStorage.setItem("token", resp.token);
-        this.router.navigate(['home']);
-      },
-      error: (err) => {
-        this.errorMsg = "Wrong credentials!"
-        console.log(err)
-      }
-    })
+  tryLogin() {
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (resp) => {
+          this.errorMsg = "";
+          localStorage.setItem("token", resp.token);
+          this.router.navigate(['home']);
+        },
+        error: (err) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "Wrong credentials!" });
+          console.log(err);
+        }
+      });
+    } else {
+      this.errorMsg = "Please fill in all required fields correctly.";
+    }
   }
 }

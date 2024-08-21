@@ -52,9 +52,9 @@ button{
     width: 70%;
 }
 
-button:hover{
-    background-color: #fbc299;
-    transition: 0.5s;
+button:disabled{
+    background-color: rgb(236, 207, 186);
+    color:#5b5c52;
 }
 
 a{

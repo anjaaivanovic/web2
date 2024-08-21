@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,6 +14,9 @@ import { CardComponent } from './components/card/card.component';
 import { CategoryCardComponent } from './components/category-card/category-card.component';
 import { RecipeFormComponent } from './components/recipe-form/recipe-form.component';
 import { RecipeEditFormComponent } from './components/recipe-edit-form/recipe-edit-form.component';
+import { ToastModule } from 'primeng/toast';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -35,9 +37,11 @@ import { RecipeEditFormComponent } from './components/recipe-edit-form/recipe-ed
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastModule,
+    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,16 +1,44 @@
 <div class="card">
   <div class="card-content">
-    <img [src]="url.concat('/', recipe.image)" alt="{{ recipe.title }}" class="recipe-image">
+    <div class="recipe-image-container">
+      <img
+        [src]="url.concat('/', recipe.image)"
+        alt="{{ recipe.title }}"
+        class="recipe-image"
+      />
+    </div>
     <div class="recipe-details">
       <div class="recipe-header">
-        <span class="recipe-title" [routerLink]="['/recipe', recipe._id]" style="cursor:pointer">{{ recipe.title }}</span>
-        <span class="recipe-rating">{{ recipe.averageRating > 0 ? recipe.averageRating: "Not rated" }} <i class="fa fa-star"></i></span>
+        <span
+          class="recipe-title"
+          [routerLink]="['/recipe', recipe._id]"
+          style="cursor: pointer"
+          >{{ recipe.title }}</span
+        >
+        <span class="recipe-rating"
+          >{{ recipe.averageRating > 0 ? recipe.averageRating : "Not rated" }}
+          <i class="fa fa-star"></i
+        ></span>
       </div>
-      <p class="recipe-author"><span [routerLink]="['/profile', recipe.owner._id]" style="cursor:pointer">{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</span></p>
+      <p class="recipe-author">
+        <span
+          [routerLink]="['/profile', recipe.owner._id]"
+          style="cursor: pointer"
+          >{{ recipe.owner.firstName }} {{ recipe.owner.lastName }}</span
+        >
+      </p>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div class="recipe-footer">
-        <span class="recipe-time"><img [src]="url + '/prep.png'">{{ recipe.prepTime }}min<img [src]="url + '/cook.png'">{{recipe.cookTime}}min</span>
-        <a [routerLink]="['/recipe', recipe._id]" class="view-recipe-button">View recipe >></a>
+        <span class="recipe-time"
+          ><img [src]="url + '/prep.png'" />{{ recipe.prepTime }}min<img
+            [src]="url + '/cook.png'"
+          />{{ recipe.cookTime }}min</span
+        >
+        <button type="button" class="btn btn-dark">
+          <a [routerLink]="['/recipe', recipe._id]" class="view-recipe-a d-flex justify-content-center align-items-center"
+            >View recipe <i class="pi pi-angle-right"></i
+          ></a>
+        </button>
       </div>
     </div>
   </div>

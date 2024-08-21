@@ -7,6 +7,7 @@ import { PostRecipe } from '../../models/postRecipe.model';
 import { RecipeService } from '../../services/recipe.service';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-recipe-form',
@@ -24,7 +25,13 @@ export class RecipeFormComponent {
   
   photoURL: string | ArrayBuffer | null = null;
 
-  constructor(private router: Router, private modalService: ModalService, private categoryService: CategoryService, private recipeService: RecipeService, private authService: AuthService) {
+  constructor(
+    private modalService: ModalService,
+    private categoryService: CategoryService,
+    private recipeService: RecipeService,
+    private authService: AuthService,
+    private messageService: MessageService
+  ) {
     this.modalService.getModalVisibility(this.modalId).subscribe((isVisible: boolean) => {
       this.isVisible = isVisible;
     });

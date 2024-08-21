@@ -3,14 +3,15 @@
         <div class="row align-items-center justify-content-center">
             <div class="col-4">
                 <h1>Sign up</h1>
-                <input type="text" [(ngModel)]="register.firstName" placeholder="First name"><br>
-                <input type="text" [(ngModel)]="register.lastName" placeholder="Last name"><br>
-                <input type="email" [(ngModel)]="register.email" placeholder="Email address"><br>
-                <input type="password" [(ngModel)]="register.password" placeholder="Password"><br>
-                <button (click)="tryRegister()">Sign up now!</button><br><br>
+                <form [formGroup]="registerForm" (ngSubmit)="tryRegister()">
+                    <input type="text" formControlName="firstName" placeholder="First name"><br>
+                    <input type="text" formControlName="lastName" placeholder="Last name"><br>
+                    <input type="email" formControlName="email" placeholder="Email address"><br>
+                    <input type="password" formControlName="password" placeholder="Password"><br>
+                    <button type="submit" [disabled]="!registerForm.valid">Sign up now!</button><br><br>
+                </form>
                 <span>Already have an account? <a [routerLink]="['/login']">Sign in.</a></span><br>
-                <span *ngIf="!register.firstName || !register.lastName || !register.email || !register.password" class="text-danger">Fill all fields!</span>
-                <br>Or<br><a [routerLink]="['/home']">Continue browsing without an account.</a>
+                Or<br><a [routerLink]="['/home']">Continue browsing without an account.</a>
             </div>
         </div>
     </div>
